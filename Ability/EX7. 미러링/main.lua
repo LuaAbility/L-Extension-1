@@ -9,7 +9,7 @@ function main(abilityData)
 		if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
 			if damagee:getHealth() - e:getDamage() <= 0 then
 				if game.checkCooldown(e:getEntity(), a, 0) then
-					game.sendMessage(damager, "§c미러링 능력에 의해 치명적인 데미지를 입습니다.")
+					game.sendMessage(damager, "§c미러링 능력에 의해 즉사합니다.")
 					game.sendMessage(damagee, "§4[§c미러링§4] §c능력이 발동되어 능력이 제거됩니다.")
 					game.removeAbility(damagee, a, false)
 					e:setCancelled(true)
@@ -17,7 +17,7 @@ function main(abilityData)
 					damager:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, damager:getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 					damager:getWorld():spawnParticle(import("$.Particle").REDSTONE, damager:getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").RED, 1}))
 					damager:getWorld():playSound(damager:getLocation(), import("$.Sound").ENTITY_WITHER_AMBIENT, 0.5, 1.0)
-					damager:damage(9999999, damagee)
+					damager:setHealth(0)
 				end
 			end
 			
