@@ -29,15 +29,13 @@ function main(abilityData)
 				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
 			end
 		end
-		
-		print(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getBaseValue())
 	end)
 	
 	plugin.registerEvent(abilityData, "PlayerItemHeldEvent", 0, function(a, e)
 		local item = e:getPlayer():getInventory():getItem(e:getNewSlot())
 		local hit = tonumber(game.getPlayer(e:getPlayer()):getVariable("EX010-hit"))
 		if game.checkCooldown(e:getPlayer(), a, 2) then
-			if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
+			if item ~= nil and game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
 				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(1000)
 			else 
 				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())

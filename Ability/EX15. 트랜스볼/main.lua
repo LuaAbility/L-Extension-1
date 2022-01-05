@@ -5,12 +5,13 @@ function main(abilityData)
 		if e:getAction():toString() == "RIGHT_CLICK_AIR" or e:getAction():toString() == "RIGHT_CLICK_BLOCK" then
 			if e:getPlayer():getInventory():getItemInMainHand() ~= nil then
 				if game.isAbilityItem(e:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
-					local x = game.getPlayer(e:getPlayer()):getVariable("EX015-x")
-					local y = game.getPlayer(e:getPlayer()):getVariable("EX015-y")
-					local z = game.getPlayer(e:getPlayer()):getVariable("EX015-z")
-					
-					if x ~= "" and y ~= "" and z ~= "" then
-						if game.checkCooldown(e:getPlayer(), abilityData, 0) then
+					if game.checkCooldown(e:getPlayer(), abilityData, 0) then
+						local x = game.getPlayer(e:getPlayer()):getVariable("EX015-x")
+						local y = game.getPlayer(e:getPlayer()):getVariable("EX015-y")
+						local z = game.getPlayer(e:getPlayer()):getVariable("EX015-z")
+						
+						
+						if x ~= "" and y ~= "" and z ~= "" then
 							x = tonumber(x)
 							y = tonumber(y)
 							z = tonumber(z)
@@ -22,9 +23,10 @@ function main(abilityData)
 							e:getPlayer():getWorld():playSound(e:getPlayer():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
 							
 							game.checkCooldown(e:getPlayer(), abilityData, 1, false)
+						else 
+							a:ResetCooldown(e:getPlayer(), 0, false)
+							game.sendMessage(e:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 						end
-					else 
-						game.sendMessage(e:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 					end
 				end
 			end
@@ -35,12 +37,12 @@ function main(abilityData)
 		if e:getDamager():getType():toString() == "PLAYER" and e:getEntity():getType():toString() == "PLAYER" then
 			local item = e:getDamager():getInventory():getItemInMainHand()
 			if game.isAbilityItem(item, "IRON_INGOT") then
-				local x = game.getPlayer(e:getDamager()):getVariable("EX015-x")
-				local y = game.getPlayer(e:getDamager()):getVariable("EX015-y")
-				local z = game.getPlayer(e:getDamager()):getVariable("EX015-z")
-				
-				if x ~= "" and y ~= "" and z ~= "" then
-					if game.checkCooldown(e:getDamager(), a, 1) then
+				if game.checkCooldown(e:getDamager(), a, 1) then
+					local x = game.getPlayer(e:getDamager()):getVariable("EX015-x")
+					local y = game.getPlayer(e:getDamager()):getVariable("EX015-y")
+					local z = game.getPlayer(e:getDamager()):getVariable("EX015-z")
+					
+					if x ~= "" and y ~= "" and z ~= "" then
 						x = tonumber(x)
 						y = tonumber(y)
 						z = tonumber(z)
@@ -53,9 +55,10 @@ function main(abilityData)
 						game.sendMessage(e:getEntity(), "§2트랜스볼 §a능력의 영향으로 지정된 좌표로 이동합니다.")
 						
 						game.checkCooldown(e:getDamager(), abilityData, 0, false)
+					else 
+						a:ResetCooldown(e:getPlayer(), 1, false)
+						game.sendMessage(e:getDamager(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 					end
-				else 
-					game.sendMessage(e:getDamager(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 				end
 			end
 		end

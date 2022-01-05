@@ -3,13 +3,13 @@ function main(abilityData)
 		if e:getAction():toString() == "RIGHT_CLICK_AIR" or e:getAction():toString() == "RIGHT_CLICK_BLOCK" then
 			if e:getItem() ~= nil then
 				if game.isAbilityItem(e:getItem(), "IRON_INGOT") then
-					if game.getPlayer(e:getPlayer()):getVariable("EX009-concert") ~= "true" then
-						if game.checkCooldown(e:getPlayer(), abilityData, 0) then
+					if game.checkCooldown(e:getPlayer(), abilityData, 0) then
+						if game.getPlayer(e:getPlayer()):getVariable("EX009-concert") ~= "true" then
 							game.getPlayer(e:getPlayer()):setVariable("EX009-concert", "true")
 							concert(e:getPlayer())
+						else 
+							game.sendMessage(e:getPlayer(), "§4[§cK.K.§4] §c콘서트는 이번 게임에서 이미 개최 되었습니다.") 
 						end
-					else 
-						game.sendMessage(e:getPlayer(), "§4[§cK.K.§4] §c콘서트는 이번 게임에서 이미 개최 되었습니다.") 
 					end
 				end
 			end

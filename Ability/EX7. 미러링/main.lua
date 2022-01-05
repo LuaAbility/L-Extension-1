@@ -20,7 +20,6 @@ function main(abilityData)
 					damager:setHealth(0)
 				end
 			end
-			
 		end
 	end)
 end

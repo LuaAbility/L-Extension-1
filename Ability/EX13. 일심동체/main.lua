@@ -36,7 +36,6 @@ function main(abilityData)
 							player[i]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player[i]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 							player[i]:getPlayer():playSound(player[i]:getPlayer():getLocation(), import("$.Sound").ENTITY_WITHER_DEATH, 2, 0.7)
 							player[i]:getPlayer():setHealth(0)
-							
 						end
 					end
 				end

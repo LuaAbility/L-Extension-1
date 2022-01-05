@@ -1,12 +1,12 @@
 function main(abilityData)
 	local stop = 0
 	
-	plugin.registerEvent(abilityData, "PlayerInteractEvent", 1600, function(a, e)
+	plugin.registerEvent(abilityData, "PlayerInteractEvent", 2400, function(a, e)
 		if e:getAction():toString() == "RIGHT_CLICK_AIR" or e:getAction():toString() == "RIGHT_CLICK_BLOCK" then
 			if e:getItem() ~= nil then
 				if game.isAbilityItem(e:getItem(), "IRON_INGOT") then
 					if game.checkCooldown(e:getPlayer(), abilityData, 0) then
-						stop = 300
+						stop = 200
 
 
 						local players = util.getTableFromList(game.getPlayers())
