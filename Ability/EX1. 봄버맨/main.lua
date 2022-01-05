@@ -16,6 +16,7 @@ function main(abilityData)
 						end
 					else 
 						game.sendMessage(e:getPlayer(), "§4[§c봄버맨§4] §c현재 소지 중인 폭탄이 없습니다.")
+						a:ResetCooldown(e:getPlayer(), 0, false)
 					end
 				end
 			end
