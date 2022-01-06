@@ -20,6 +20,7 @@ function main(abilityData)
 					end
 				
 					util.runLater(function() 
+						
 						local randomNumber = math.random(1, 100)
 						if randomNumber <= killPercent then 
 							e:getEntity():getWorld():strikeLightningEffect(e:getEntity():getLocation())

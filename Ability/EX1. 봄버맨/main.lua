@@ -8,6 +8,7 @@ function main(abilityData)
 					if game.checkCooldown(e:getPlayer(), a, 0, false) then
 						local bomb = tonumber(game.getPlayer(e:getPlayer()):getVariable("EX001-bomb"))
 						if bomb > 0 then
+							game.sendMessage(e:getPlayer(), "§1[§b봄버맨§1] §b능력을 사용했습니다.")
 							local entity = e:getPlayer():getWorld():spawnEntity(e:getPlayer():getLocation(), types.PRIMED_TNT)
 							bomb = bomb - 1
 							game.getPlayer(e:getPlayer()):setVariable("EX001-bomb", tostring(bomb))

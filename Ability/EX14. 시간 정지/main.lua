@@ -28,7 +28,7 @@ function main(abilityData)
 						util.runLater(function() 
 							game.sendMessage(e:getPlayer(), "§2[§a시간 정지§2] §a능력 시전 시간이 종료되었습니다.") 
 							game.getPlayer(e:getPlayer()):setVariable("EX014-stop", "false")
-						end, 301)
+						end, 201)
 					end
 				end
 			end

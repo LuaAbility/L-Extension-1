@@ -10,6 +10,7 @@ function shuffle()
 		table.insert(abilities, players[i]:getAbility():clone())
 	end
 	
+	
 	for i = 1, 100 do
 		local randomIndex = math.random(1, #abilities)
 		local temp = abilities[randomIndex]

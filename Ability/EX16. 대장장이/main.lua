@@ -69,6 +69,7 @@ function starForce(targetItem)
 	elseif	targetStar == 4 then targetStarPercent = 20
 	elseif	targetStar == 5 then targetStarPercent = 10 end
 	
+	
 	local randomNumber = math.random(1, 100)
 	if randomNumber <= targetStarPercent then
 		local itemDamage = weaponDamage(targetItem:getType()) - 1

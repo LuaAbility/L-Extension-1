@@ -5,6 +5,7 @@ function main(abilityData)
 				if game.checkCooldown(e:getEntity(), a, 0) then
 					e:setCancelled(true)
 					local players = util.getTableFromList(game.getPlayers())
+					
 					local targetPlayer = players[math.random(1, #players)]:getPlayer()
 					while targetPlayer:getName() == e:getEntity():getName() do targetPlayer = players[math.random(1, #players)]:getPlayer() end
 					

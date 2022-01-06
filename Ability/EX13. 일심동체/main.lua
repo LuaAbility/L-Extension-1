@@ -5,6 +5,7 @@ function main(abilityData)
 		local playerName = p:getName()
 		
 		while p:getName() == playerName do 
+			
 			playerIndex = math.random(1, #players)
 			playerName = players[playerIndex]:getPlayer():getName() 
 		end
