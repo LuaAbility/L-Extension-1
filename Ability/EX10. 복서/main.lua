@@ -1,61 +1,57 @@
-function main(abilityData)
-	local attribute = import("$.attribute.Attribute")
-	
-	plugin.registerEvent(abilityData, "EntityDamageByEntityEvent", 0, function(a, e)
-		if e:getDamager():getType():toString() == "PLAYER" and e:getEntity():getType():toString() == "PLAYER" then
-			local item = e:getDamager():getInventory():getItemInMainHand()
-			local hit = tonumber(game.getPlayer(e:getDamager()):getVariable("EX010-hit"))
-			if game.checkCooldown(e:getDamager(), a, 0) then
-				if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
-					game.getPlayer(e:getDamager()):setVariable("EX010-hit", tostring(hit - 1))
-					e:getEntity():setMaximumNoDamageTicks(0)
-					util.runLater(function() 
-						e:getEntity():setMaximumNoDamageTicks(12) 
-					end, 1)
-				else 
-					e:getDamager():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(e:getDamager():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
-				end
-			end
-		end
-	end)
-	
-	plugin.registerEvent(abilityData, "PlayerSwapHandItemsEvent", 0, function(a, e)
-		local item = e:getPlayer():getInventory():getItemInMainHand()
-		local hit = tonumber(game.getPlayer(e:getPlayer()):getVariable("EX010-hit"))
-		if game.checkCooldown(e:getPlayer(), a, 1) then
-			if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
-				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(1000)
-			else 
-				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
-			end
-		end
-	end)
-	
-	plugin.registerEvent(abilityData, "PlayerItemHeldEvent", 0, function(a, e)
-		local item = e:getPlayer():getInventory():getItem(e:getNewSlot())
-		local hit = tonumber(game.getPlayer(e:getPlayer()):getVariable("EX010-hit"))
-		if game.checkCooldown(e:getPlayer(), a, 2) then
-			if item ~= nil and game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
-				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(1000)
-			else 
-				e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
-			end
-		end
-		
-		print(e:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getBaseValue())
-	end)
-	
-	plugin.addPassiveScript(abilityData, 0, function(p)
+local attribute = import("$.attribute.Attribute")
+
+function Init(abilityData)
+	plugin.registerEvent(abilityData, "EX010-setAttackSpeed1", "PlayerSwapHandItemsEvent", 0)
+	plugin.registerEvent(abilityData, "EX010-setAttackSpeed2", "PlayerItemHeldEvent", 0)
+	plugin.registerEvent(abilityData, "EX010-removeTicks", "EntityDamageEvent", 0)
+end
+
+function onEvent(funcTable)
+	if funcTable[1] == "EX010-setAttackSpeed1" then setAttackSpeed(funcTable[2]:getPlayer():getInventory():getItemInOffHand(), funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX010-setAttackSpeed2" then setAttackSpeed(funcTable[2]:getPlayer():getInventory():getItem(funcTable[2]:getNewSlot()), funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX010-removeTicks" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then removeTicks(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+end
+
+function onTimer(player, ability)
+	if player:getVariable("EX010-hit") == nil then 
 		local players = util.getTableFromList(game.getAllPlayers())
-		game.getPlayer(p):setVariable("EX010-hit", tostring(#players * 20))
-	end)
+		player:setVariable("EX010-hit", #players * 20) 
+	end
 	
-	plugin.addPassiveScript(abilityData, 1, function(p)
-		local hit = game.getPlayer(p):getVariable("EX010-hit")
-		game.sendActionBarMessage(p, "§a남은 타격 횟수 §6: §b" .. hit .. "회")
-	end)
-	
-	plugin.onPlayerEnd(abilityData, function(p)
-		p:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(p:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
-	end)
+	local hit = player:getVariable("EX010-hit")
+	game.sendActionBarMessage(player:getPlayer(), "§a남은 타격 횟수 §6: §b" .. hit .. "회")
+end
+
+function Reset(player, ability)
+	player:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(player:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
+	local players = util.getTableFromList(game.getAllPlayers())
+	for i = 1, #players do
+		players[i]:getPlayer():setMaximumNoDamageTicks(12) 
+	end
+end
+
+function setAttackSpeed(item, event, ability, id)
+	local hit = game.getPlayer(event:getPlayer()):getVariable("EX010-hit")
+	if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
+		if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(1000)
+		else event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue()) end
+	end
+end
+
+function removeTicks(LAPlayer, event, ability, id)
+	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
+		local item = event:getDamager():getInventory():getItemInMainHand()
+		local hit = game.getPlayer(event:getDamager()):getVariable("EX010-hit")
+		if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
+			if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
+				game.getPlayer(event:getDamager()):setVariable("EX010-hit", hit - 1)
+				event:getEntity():setMaximumNoDamageTicks(0)
+				util.runLater(function() 
+					event:getEntity():setMaximumNoDamageTicks(12) 
+				end, 1)
+			else 
+				event:getDamager():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(event:getDamager():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue())
+			end
+		end
+	end
 end

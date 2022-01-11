@@ -1,99 +1,89 @@
-function main(abilityData)
-	local stop = 0
+local attribute = import("$.attribute.Attribute")
+
+function Init(abilityData)
+	plugin.registerEvent(abilityData, "EX015-saveLoc", "PlayerSwapHandItemsEvent", 0)
+	plugin.registerEvent(abilityData, "EX015-teleportSelf", "PlayerInteractEvent", 900)
+	plugin.registerEvent(abilityData, "EX015-teleportTarget", "EntityDamageEvent", 900)
+end
+
+function onEvent(funcTable)
+	if funcTable[1] == "EX015-saveLoc" then saveLoc(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX015-teleportSelf" then teleportSelf(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX015-teleportTarget" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then teleportTarget(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+end
+
+function onTimer(player, ability)
+	local targetLoc = player:getVariable("EX015-Location")
 	
-	plugin.registerEvent(abilityData, "PlayerInteractEvent", 900, function(a, e)
-		if e:getAction():toString() == "RIGHT_CLICK_AIR" or e:getAction():toString() == "RIGHT_CLICK_BLOCK" then
-			if e:getPlayer():getInventory():getItemInMainHand() ~= nil then
-				if game.isAbilityItem(e:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
-					if game.checkCooldown(e:getPlayer(), abilityData, 0) then
-						local x = game.getPlayer(e:getPlayer()):getVariable("EX015-x")
-						local y = game.getPlayer(e:getPlayer()):getVariable("EX015-y")
-						local z = game.getPlayer(e:getPlayer()):getVariable("EX015-z")
-						
-						
-						if x ~= "" and y ~= "" and z ~= "" then
-							x = tonumber(x)
-							y = tonumber(y)
-							z = tonumber(z)
-							
-							e:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, e:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1, 1)
-							e:getPlayer():getWorld():playSound(e:getPlayer():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
-							e:getPlayer():teleport(newInstance("$.Location", {e:getPlayer():getWorld(), x, y, z}))
-							e:getPlayer():getWorld():spawnParticle(import("$.Particle").REVERSE_PORTAL, e:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1, 1)
-							e:getPlayer():getWorld():playSound(e:getPlayer():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
-							
-							game.checkCooldown(e:getPlayer(), abilityData, 1, false)
-						else 
-							a:ResetCooldown(e:getPlayer(), 0, false)
-							game.sendMessage(e:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
-						end
-					end
+	if targetLoc ~= nil then
+		game.sendActionBarMessage(player:getPlayer(), "§a월드 §6: §b" .. worldInfo(targetLoc:getWorld():getEnvironment()) .. " §aX §6: §b" .. targetLoc:getX() .. " §aY §6: §b" .. targetLoc:getY() .. " §aZ §6: §b" .. targetLoc:getZ())
+		local loc = targetLoc:clone():add(0, 1, 0)
+		loc:getWorld():spawnParticle(import("$.Particle").REDSTONE, loc, 300, 0.2, 0.2, 0.2, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").LIME, 1}))
+		loc:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, loc, 150, 0.2, 0.2, 0.2, 0.05)
+	end
+end
+
+function saveLoc(LAPlayer, event, ability, id)
+	if event:getOffHandItem() ~= nil then
+		if game.isAbilityItem(event:getOffHandItem(), "IRON_INGOT") then
+			if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
+				game.getPlayer(event:getPlayer()):setVariable("EX015-Location", event:getPlayer():getLocation())
+				
+				game.sendMessage(event:getPlayer(), "§2[§a트랜스볼§2] §a좌표를 저장했습니다.")
+				event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.1)
+				event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").BLOCK_BEACON_ACTIVATE, 0.5, 1)
+			end
+		end
+	end
+end
+
+function teleportSelf(LAPlayer, event, ability, id)
+	if event:getAction():toString() == "RIGHT_CLICK_AIR" or event:getAction():toString() == "RIGHT_CLICK_BLOCK" then
+		if event:getPlayer():getInventory():getItemInMainHand() ~= nil then
+			if game.isAbilityItem(event:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
+				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
+					game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, "EX015-teleportTarget", false)
+					teleport(game.getPlayer(event:getPlayer()), event:getPlayer(), ability)
 				end
 			end
 		end
-	end)
-	
-	plugin.registerEvent(abilityData, "EntityDamageByEntityEvent", 900, function(a, e)
-		if e:getDamager():getType():toString() == "PLAYER" and e:getEntity():getType():toString() == "PLAYER" then
-			local item = e:getDamager():getInventory():getItemInMainHand()
-			if game.isAbilityItem(item, "IRON_INGOT") then
-				if game.checkCooldown(e:getDamager(), a, 1) then
-					local x = game.getPlayer(e:getDamager()):getVariable("EX015-x")
-					local y = game.getPlayer(e:getDamager()):getVariable("EX015-y")
-					local z = game.getPlayer(e:getDamager()):getVariable("EX015-z")
-					
-					if x ~= "" and y ~= "" and z ~= "" then
-						x = tonumber(x)
-						y = tonumber(y)
-						z = tonumber(z)
-						
-						e:getEntity():getWorld():spawnParticle(import("$.Particle").PORTAL, e:getEntity():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1, 1)
-						e:getEntity():getWorld():playSound(e:getEntity():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
-						e:getEntity():teleport(newInstance("$.Location", {e:getDamager():getWorld(), x, y, z}))
-						e:getEntity():getWorld():spawnParticle(import("$.Particle").REVERSE_PORTAL, e:getEntity():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1, 1)
-						e:getEntity():getWorld():playSound(e:getEntity():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
-						game.sendMessage(e:getEntity(), "§2트랜스볼 §a능력의 영향으로 지정된 좌표로 이동합니다.")
-						
-						game.checkCooldown(e:getDamager(), abilityData, 0, false)
-					else 
-						a:ResetCooldown(e:getPlayer(), 1, false)
-						game.sendMessage(e:getDamager(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
-					end
-				end
+	end
+end
+
+function teleportTarget(LAPlayer, event, ability, id)
+	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
+		local item = event:getDamager():getInventory():getItemInMainHand()
+		if game.isAbilityItem(item, "IRON_INGOT") then
+			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
+				game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, "EX015-teleportSelf", false)
+				teleport(game.getPlayer(event:getDamager()), event:getEntity(), ability)
 			end
 		end
-	end)
+	end
+end
+
+function teleport(player, target, ability)
+	local targetLoc = player:getVariable("EX015-Location")
 	
-	plugin.registerEvent(abilityData, "PlayerSwapHandItemsEvent", 0, function(a, e)
-		if e:getOffHandItem() ~= nil then
-			if game.isAbilityItem(e:getOffHandItem(), "IRON_INGOT") then
-				if game.checkCooldown(e:getPlayer(), abilityData, 2) then
-					game.getPlayer(e:getPlayer()):setVariable("EX015-x", tostring(e:getPlayer():getLocation():getX()))
-					game.getPlayer(e:getPlayer()):setVariable("EX015-y", tostring(e:getPlayer():getLocation():getY()))
-					game.getPlayer(e:getPlayer()):setVariable("EX015-z", tostring(e:getPlayer():getLocation():getZ()))
-					
-					game.sendMessage(e:getPlayer(), "§2[§a트랜스볼§2] §a좌표를 저장했습니다.")
-					e:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, e:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.1)
-					e:getPlayer():getWorld():playSound(e:getPlayer():getLocation(), import("$.Sound").BLOCK_BEACON_ACTIVATE, 0.5, 1)
-				end
-			end
-		end
-	end)
+	if targetLoc ~= nil then
+		target:getWorld():spawnParticle(import("$.Particle").PORTAL, target:getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
+		target:getWorld():playSound(target:getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
+		target:teleport(targetLoc)
+		target:getWorld():spawnParticle(import("$.Particle").REVERSE_PORTAL, target:getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
+		target:getWorld():playSound(target:getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
+		game.sendMessage(target, "§2트랜스볼 §a능력의 영향으로 지정된 좌표로 이동합니다.")
+	else 
+		ability:resetCooldown(EX015-teleportSelf)
+		ability:resetCooldown(EX015-teleportTarget)
+		game.sendMessage(player:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
+	end
+end
+
+
+function worldInfo(info)
+	if info:toString() == "NETHER" then return "네더" end
+	if info:toString() == "THE_END" then return "엔드" end
+	if info:toString() == "NORMAL" then return "일반" end
+	if info:toString() == "CUSTOM" then return "???" end
 	
-	plugin.addPassiveScript(abilityData, 5, function(p)
-		local x = game.getPlayer(p):getVariable("EX015-x")
-		local y = game.getPlayer(p):getVariable("EX015-y")
-		local z = game.getPlayer(p):getVariable("EX015-z")
-		
-		if x ~= "" and y ~= "" and z ~= "" then
-			game.sendActionBarMessage(p, "§aX §6: §b" .. x .. " §aY §6: §b" .. y .. " §aZ §6: §b" .. z)
-			x = tonumber(x)
-			y = tonumber(y)
-			z = tonumber(z)
-			local loc = newInstance("$.Location", {p:getWorld(), x, y + 1, z})
-			
-			p:getWorld():spawnParticle(import("$.Particle").REDSTONE, loc, 300, 0.2, 0.2, 0.2, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").LIME, 1}))
-			p:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, loc, 150, 0.2, 0.2, 0.2, 0.05)
-		end
-	end)
 end
