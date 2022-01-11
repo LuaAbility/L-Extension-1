@@ -4,7 +4,7 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX013-cancelDamage" then cancelDamage(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX013-cancelDamage" then cancelDamage(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 	if funcTable[1] == "EX013-checkFriendDead" then checkFriendDead(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
@@ -28,9 +28,9 @@ function onTimer(player, ability)
 	game.sendActionBarMessage(player:getPlayer(), "§e일심동체 §7: §6" .. friend)
 end
 
-function cancelDamage(event, ability, id)
+function cancelDamage(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
-		if game.checkCooldown(game.getPlayer(event:getEntity()), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 			event:setCancelled(true)
 		end
 	end
@@ -39,9 +39,9 @@ end
 function checkFriendDead(player, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
 		if player:getVariable("EX013-friend") == event:getEntity():getName() then
-			if game.checkCooldown(player, ability, id) then
+			if game.checkCooldown(LAPlayer, player, ability, id) then
 				game.sendMessage(player:getPlayer(), "§4[§c일심동체§4] " .. event:getEntity():getName() .. "§c님이 사망하여 같이 사망합니다.")
-				player:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, player:getPlayer():getLocation():add(0,1,0), 1000, 0.5, 1, 0.5, 0.75)
+				player:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, player:getPlayer():getLocation():add(0,1,0), 1000, 0.5, 1, 0.5)
 				player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 				player:getPlayer():playSound(player:getPlayer():getLocation(), import("$.Sound").ENTITY_WITHER_DEATH, 2, 0.7)
 				player:getPlayer():setHealth(0)

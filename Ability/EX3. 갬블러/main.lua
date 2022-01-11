@@ -3,7 +3,7 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX003-gamble" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then gamble(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX003-gamble" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then gamble(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -12,11 +12,11 @@ function onTimer(player, ability)
 	game.sendActionBarMessage(player:getPlayer(), "§a승리 확률 §7: §2" .. killPercent .. "%" .. "§7 / " .. "§c패배 확률 §7: §4" .. (100 - killPercent) .. "%")
 end
 
-function gamble(event, ability, id)
+function gamble(LAPlayer, event, ability, id)
 	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
 		local item = event:getDamager():getInventory():getItemInMainHand()
 		if game.isAbilityItem(item, "IRON_INGOT") then
-			if game.checkCooldown(game.getPlayer(event:getDamager()), ability, id) then
+			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 				local killPercent = game.getPlayer(event:getDamager()):getVariable("EX003-killPercent")
 				game.sendMessage(event:getEntity(), "§a갬블러가 게임을 신청하였습니다.")	
 				game.sendMessage(event:getEntity(), "§a승리 확률 §7: §2" .. (100 - killPercent) .. "%" .. "§7 / " .. "§c패배 확률 §7: §4" .. killPercent .. "%")	

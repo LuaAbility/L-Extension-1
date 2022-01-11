@@ -3,14 +3,14 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX014-reinforce" then reinforce(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX014-reinforce" then reinforce(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function reinforce(event, ability, id)
+function reinforce(LAPlayer, event, ability, id)
 	if event:getAction():toString() == "LEFT_CLICK_AIR" or event:getAction():toString() == "LEFT_CLICK_BLOCK" then
 		if event:getPlayer():getInventory():getItemInMainHand() ~= nil then
 			if game.isAbilityItem(event:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
-				if game.checkCooldown(game.getPlayer(event:getPlayer()), ability, id, false) then
+				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id, false) then
 					local targetItem = event:getPlayer():getInventory():getItemInOffHand()
 					if targetItem ~= nil and targetItem:getType():toString() ~= "AIR" then
 						if string.find(targetItem:getItemMeta():getDisplayName(), "★5") == nil then

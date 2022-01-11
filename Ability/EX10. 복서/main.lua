@@ -9,7 +9,7 @@ end
 function onEvent(funcTable)
 	if funcTable[1] == "EX010-setAttackSpeed1" then setAttackSpeed(funcTable[2]:getPlayer():getInventory():getItemInOffHand(), funcTable[2], funcTable[4], funcTable[1]) end
 	if funcTable[1] == "EX010-setAttackSpeed2" then setAttackSpeed(funcTable[2]:getPlayer():getInventory():getItem(funcTable[2]:getNewSlot()), funcTable[2], funcTable[4], funcTable[1]) end
-	if funcTable[1] == "EX010-removeTicks" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then removeTicks(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX010-removeTicks" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then removeTicks(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -32,17 +32,17 @@ end
 
 function setAttackSpeed(item, event, ability, id)
 	local hit = game.getPlayer(event:getPlayer()):getVariable("EX010-hit")
-	if game.checkCooldown(game.getPlayer(event:getPlayer()), ability, id) then
+	if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 		if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(1000)
 		else event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):setBaseValue(event:getPlayer():getAttribute(attribute.GENERIC_ATTACK_SPEED):getDefaultValue()) end
 	end
 end
 
-function removeTicks(event, ability, id)
+function removeTicks(LAPlayer, event, ability, id)
 	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
 		local item = event:getDamager():getInventory():getItemInMainHand()
 		local hit = game.getPlayer(event:getDamager()):getVariable("EX010-hit")
-		if game.checkCooldown(game.getPlayer(event:getDamager()), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 			if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
 				game.getPlayer(event:getDamager()):setVariable("EX010-hit", hit - 1)
 				event:getEntity():setMaximumNoDamageTicks(0)

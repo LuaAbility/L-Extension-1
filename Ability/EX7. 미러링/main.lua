@@ -5,17 +5,17 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX007-reflection" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then reflection(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX007-reflection" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then reflection(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function reflection(event, ability, id)
+function reflection(LAPlayer, event, ability, id)
 	local damagee = event:getEntity()
 	local damager = event:getDamager()
 	if damager:getType():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
 	
 	if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
 		if damagee:getHealth() - event:getDamage() <= 0 then
-			if game.checkCooldown(game.getPlayer(damagee), ability, id) then
+			if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 				game.sendMessage(damager, "§c미러링 능력에 의해 즉사합니다.")
 				game.sendMessage(damagee, "§4[§c미러링§4] §c능력이 발동되어 능력이 제거됩니다.")
 				util.runLater(function() game.removeAbility(game.getPlayer(damagee), ability, false) end, 1)

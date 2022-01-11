@@ -3,13 +3,13 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX019-swap" then swap(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX019-swap" then swap(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function swap(event, ability, id)
+function swap(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
 		if event:getEntity():getHealth() - event:getDamage() <= 0 then
-			if game.checkCooldown(game.getPlayer(event:getEntity()), ability, id) then
+			if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 				event:setCancelled(true)
 				local players = util.getTableFromList(game.getPlayers())
 				

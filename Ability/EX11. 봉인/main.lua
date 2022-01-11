@@ -1,18 +1,18 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX011-lockAbility", "EntityDamageEvent", 0)
+	plugin.registerEvent(abilityData, "EX011-lockAbility", "EntityDamageEvent", 2400)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX011-lockAbility" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then lockAbility(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX011-lockAbility" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then lockAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function lockAbility(event, ability, id)
+function lockAbility(LAPlayer, event, ability, id)
 	local damagee = event:getEntity()
 	local damager = event:getDamager()
 	if damager:getType():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
 	
 	if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
-		if game.checkCooldown(game.getPlayer(damagee), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 			game.getPlayer(damager):setVariable("abilityLock", true)
 			damagee:sendMessage("§1[§b봉인§1] §b능력을 사용했습니다.")
 			damager:sendMessage("§c능력이 봉인되었습니다! 30초 뒤에 재사용 가능합니다.")

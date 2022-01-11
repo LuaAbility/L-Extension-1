@@ -3,11 +3,11 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX018-deathNote" then deathNote(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX018-deathNote" then deathNote(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function deathNote(event, ability, id)
-	if game.checkCooldown(game.getPlayer(event:getPlayer()), ability, id) then
+function deathNote(LAPlayer, event, ability, id)
+	if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 		local playerName = event:getLine(0)
 		local players = util.getTableFromList(game.getPlayers())
 		for i = 1, #players do

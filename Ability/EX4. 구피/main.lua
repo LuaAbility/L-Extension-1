@@ -5,7 +5,7 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX004-checkLives" then checkLives(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX004-checkLives" then checkLives(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -24,9 +24,9 @@ function Reset(player, ability)
 	player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):getDefaultValue())
 end
 
-function checkLives(event, ability, id)
+function checkLives(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
-		if game.checkCooldown(game.getPlayer(event:getEntity()), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 			if game.getPlayer(event:getEntity()):getVariable("EX004-isResurrection") == true then event:setCancelled(true)
 			elseif event:getEntity():getHealth() - event:getDamage() <= 0 then
 				if not event:isCancelled() then

@@ -4,8 +4,8 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX002-hiding" then hiding(funcTable[2], funcTable[4], funcTable[1]) end
-	if funcTable[1] == "EX002-cancelDamage" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then cancelDamage(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX002-hiding" then hiding(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX002-cancelDamage" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then cancelDamage(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -37,11 +37,11 @@ function stopHiding(player)
 	end
 end
 
-function hiding(event, ability, id)
+function hiding(LAPlayer, event, ability, id)
 	if event:getAction():toString() == "RIGHT_CLICK_AIR" or event:getAction():toString() == "RIGHT_CLICK_BLOCK" then
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
-				if game.checkCooldown(game.getPlayer(event:getPlayer()), ability, id) then
+				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 					game.getPlayer(event:getPlayer()):setVariable("EX002-isInvisible", 200)
 					event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1.2)
 					event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
@@ -59,18 +59,18 @@ function hiding(event, ability, id)
 	end
 end
 
-function cancelDamage(event, ability, id)
+function cancelDamage(LAPlayer, event, ability, id)
 	local damager = event:getDamager()
 	if event:getCause():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
 		
 	if damager:getType():toString() == "PLAYER" and game.getPlayer(damager):getVariable("EX002-isInvisible") ~= nil and game.getPlayer(damager):getVariable("EX002-isInvisible") > 0 then
-		if game.checkCooldown(game.getPlayer(damager), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(damager), ability, id) then
 			event:setCancelled(true)
 		end
 	end
 	
 	if event:getEntity():getType():toString() == "PLAYER" and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") ~= nil and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") > 0 then
-		if game.checkCooldown(game.getPlayer(event:getEntity()), ability, id) then
+		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 			event:setCancelled(true)
 		end
 	end

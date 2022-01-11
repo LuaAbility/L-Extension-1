@@ -3,10 +3,10 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX006-curse" then curse(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX006-curse" then curse(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
-function curse(event, ability, id)
+function curse(LAPlayer, event, ability, id)
 	local damageEvent = event:getEntity():getLastDamageCause()
 	
 	if (damageEvent ~= nil and damageEvent:isCancelled() == false and damageEvent:getEventName() == "EntityDamageByEntityEvent") then
@@ -15,7 +15,7 @@ function curse(event, ability, id)
 		if damageEvent:getCause():toString() == "PROJECTILE" then damager = damageEvent:getDamager():getShooter() end
 		
 		if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
-			if game.checkCooldown(game.getPlayer(damagee), ability, id) then
+			if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 				game.broadcastMessage("§4[§cLAbility§4] " .. damager:getName() .. "§c님은 §4" .. damagee:getName() .. "§c님에게 저주를 받아 모든 능력을 잃습니다.")
 				util.runLater(function() game.removeAbility(game.getPlayer(damager), ability, true) end, 1)
 				damager:getWorld():spawnParticle(import("$.Particle").REDSTONE, damager:getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").PURPLE, 1}))

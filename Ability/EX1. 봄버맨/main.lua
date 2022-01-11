@@ -5,7 +5,7 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX001-summonTNT" then summonTNT(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX001-summonTNT" then summonTNT(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -23,11 +23,11 @@ function onTimer(player, ability)
 	player:setVariable("EX001-passiveCount", count)
 end
 
-function summonTNT(event, ability, id)
+function summonTNT(LAPlayer, event, ability, id)
 	if event:getAction():toString() == "RIGHT_CLICK_AIR" or event:getAction():toString() == "RIGHT_CLICK_BLOCK" then
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
-				if game.checkCooldown(game.getPlayer(event:getPlayer()), ability, id, false) then
+				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id, false) then
 					local bomb = game.getPlayer(event:getPlayer()):getVariable("EX001-bomb")
 					if bomb > 0 then
 						game.sendMessage(event:getPlayer(), "§1[§b봄버맨§1] §b능력을 사용했습니다.")

@@ -3,7 +3,7 @@ function Init(abilityData)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX005-copy" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then copy(funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX005-copy" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then copy(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -48,11 +48,11 @@ function removeAbility(player, id)
 	player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.5)
 end
 
-function copy(event, ability, id)
+function copy(LAPlayer, event, ability, id)
 	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
 		local item = event:getDamager():getInventory():getItemInMainHand()
 		if game.isAbilityItem(item, "IRON_INGOT") then
-			if game.checkCooldown(game.getPlayer(event:getDamager()), ability, id) then
+			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 			local ability = util.getTableFromList(game.getPlayer(event:getEntity()):getAbility():clone())
 				if #ability > 0 then
 					game.sendMessage(event:getDamager(), "§2[§a따라쟁이§2] ".. ability[1].abilityName .. "§a 능력을 사용할 수 있습니다.")
