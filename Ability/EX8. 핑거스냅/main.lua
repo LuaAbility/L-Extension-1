@@ -37,6 +37,7 @@ function snap()
 	local players = util.getTableFromList(game.getPlayers())
 	
 	for i = 1, 100 do
+		math.randomseed(os.time())
 		local randomIndex = math.random(1, #players)
 		local temp = players[randomIndex]
 		players[randomIndex] = players[1]

@@ -56,6 +56,7 @@ function effect(p)
 end
 
 function starForce(targetItem)
+	math.randomseed(os.time())
 	local attribute = import("$.attribute.Attribute")
 	local equipmentSlot = import("$.inventory.EquipmentSlot")
 	

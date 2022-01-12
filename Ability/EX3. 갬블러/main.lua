@@ -33,6 +33,7 @@ function gamble(LAPlayer, event, ability, id)
 				end
 			
 				util.runLater(function() 
+					math.randomseed(os.time())
 					local randomNumber = math.random(1, 100)
 					if randomNumber <= killPercent then 
 						event:getEntity():getWorld():strikeLightningEffect(event:getEntity():getLocation())

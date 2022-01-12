@@ -1,6 +1,7 @@
 function Init(abilityData) end
 
 function onTimer(player, ability) 
+	math.randomseed(os.time())
 	if player:getVariable("EX020-passiveCount") == nil then 
 		player:setVariable("EX020-passiveCount", 0) 
 		player:setVariable("EX020-randomPassive", math.random(600, 1200)) 
