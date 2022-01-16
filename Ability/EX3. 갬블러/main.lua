@@ -34,14 +34,14 @@ function gamble(LAPlayer, event, ability, id)
 			
 				util.runLater(function() 
 					math.randomseed(os.time())
-					local randomNumber = math.random(1, 100)
+					local randomNumber = util.random(1, 100)
 					if randomNumber <= killPercent then 
 						event:getEntity():getWorld():strikeLightningEffect(event:getEntity():getLocation())
 						event:getEntity():damage(9999999, event:getDamager())
 						game.sendMessage(event:getDamager(), "§2[§a갬블러§2] §a승리하셨습니다.")	
 						game.sendMessage(event:getEntity(), "§c갬블러에게 패배하셨습니다.")	
 						
-						killPercent = killPercent - math.random(10, 20)
+						killPercent = killPercent - util.random(10, 20)
 						if killPercent < 10 then killPercent = 10 end
 						game.getPlayer(event:getDamager()):setVariable("EX003-killPercent", killPercent)
 					else 

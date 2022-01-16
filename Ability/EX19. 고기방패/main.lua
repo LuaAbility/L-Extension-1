@@ -14,8 +14,8 @@ function swap(LAPlayer, event, ability, id)
 				event:setCancelled(true)
 				local players = util.getTableFromList(game.getPlayers())
 				
-				local targetPlayer = players[math.random(1, #players)]:getPlayer()
-				while targetPlayer:getName() == event:getEntity():getName() do targetPlayer = players[math.random(1, #players)]:getPlayer() end
+				local targetPlayer = players[util.random(1, #players)]:getPlayer()
+				while targetPlayer:getName() == event:getEntity():getName() do targetPlayer = players[util.random(1, #players)]:getPlayer() end
 				
 				local targetLoc1 = targetPlayer:getLocation():clone()
 				local targetLoc2 = event:getEntity():getLocation():clone()

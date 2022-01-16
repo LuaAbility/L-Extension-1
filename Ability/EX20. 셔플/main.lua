@@ -4,14 +4,14 @@ function onTimer(player, ability)
 	math.randomseed(os.time())
 	if player:getVariable("EX020-passiveCount") == nil then 
 		player:setVariable("EX020-passiveCount", 0) 
-		player:setVariable("EX020-randomPassive", math.random(600, 1200)) 
+		player:setVariable("EX020-randomPassive", util.random(600, 1200)) 
 	end
 	local count = player:getVariable("EX020-passiveCount")
 	local maxCount = player:getVariable("EX020-randomPassive")
 	if count >= maxCount then 
 		count = 0
 		shuffle()
-		player:setVariable("EX020-randomPassive", math.random(600, 1200)) 
+		player:setVariable("EX020-randomPassive", util.random(600, 1200)) 
 	end
 	count = count + 2
 	player:setVariable("EX020-passiveCount", count)
@@ -27,7 +27,7 @@ function shuffle()
 	
 	
 	for i = 1, 100 do
-		local randomIndex = math.random(1, #abilities)
+		local randomIndex = util.random(1, #abilities)
 		local temp = abilities[randomIndex]
 		abilities[randomIndex] = abilities[1]
 		abilities[1] = temp
