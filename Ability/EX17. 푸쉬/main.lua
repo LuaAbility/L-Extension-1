@@ -8,7 +8,8 @@ function push(player)
 	local players = util.getTableFromList(game.getPlayers())
 	for i = 1, #players do
 		if players[i] ~= player then
-			if player:getPlayer():getLocation():distance(players[i]:getPlayer():getLocation()) <= 5 then
+			if player:getPlayer():getWorld():getEnvironment() == players[i]:getPlayer():getWorld():getEnvironment() and
+			player:getPlayer():getLocation():distance(players[i]:getPlayer():getLocation()) <= 5 then
 				local moveDir = newInstance("$.util.Vector", {
 				players[i]:getPlayer():getLocation():getX() - player:getPlayer():getLocation():getX(), 
 				0.4, 

@@ -37,7 +37,6 @@ function snap()
 	local players = util.getTableFromList(game.getPlayers())
 	
 	for i = 1, 100 do
-		math.randomseed(os.time())
 		local randomIndex = util.random(1, #players)
 		local temp = players[randomIndex]
 		players[randomIndex] = players[1]
@@ -45,10 +44,10 @@ function snap()
 	end
 	
 	for j = 1, (#players / 2) do
-		players[j]:getPlayer():damage(9999999)
 		game.sendMessage(players[j]:getPlayer(), "§c핑거스냅 능력으로 인해 치명적인 데미지를 입습니다.")
 		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, players[j]:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
 		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, players[j]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 		players[j]:getPlayer():playSound(players[j]:getPlayer():getLocation(), import("$.Sound").BLOCK_PORTAL_TRAVEL, 0.1, 1)
+		players[j]:getPlayer():damage(9999999)
 	end
 end

@@ -15,7 +15,7 @@ function onTimer(player, ability)
 		local playerName = player:getPlayer():getName()
 		
 		while player:getPlayer():getName() == playerName do 
-			math.randomseed(os.time())
+			
 			playerIndex = util.random(1, #players)
 			playerName = players[playerIndex]:getPlayer():getName() 
 		end
