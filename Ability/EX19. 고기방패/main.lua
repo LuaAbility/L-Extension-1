@@ -1,5 +1,5 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX019-swap", "EntityDamageEvent", 6000)
+	plugin.registerEvent(abilityData, "EX019-swap", "EntityDamageEvent", 3000)
 end
 
 function onEvent(funcTable)

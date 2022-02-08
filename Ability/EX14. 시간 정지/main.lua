@@ -21,8 +21,8 @@ end
 
 function stopMove(player, event, ability, id)
 	local stop = plugin.getPlugin().gameManager:getVariable("stopTime")
-	if stop > 0 then
-		if game.getPlayer(event:getPlayer()) ~= player then
+	if stop ~= nil and stop > 0 then
+		if game.getPlayer(event:getPlayer()) ~= player and game.getPlayer(event:getPlayer()).isSurvive then
 			event:setCancelled(true)
 			game.sendMessage(event:getPlayer(), "§4시간 정지 §c능력에 의해 이동하실 수 없습니다. (남은 시간 : " .. stop / 20.0 .. "s)")
 		end
@@ -54,7 +54,7 @@ function endOfAbility(player)
 end
 
 function Reset(player, ability)
-	if plugin.getPlugin().gameManager:getVariable("stopTime") > 0 then endOfAbility(player) end
+	if plugin.getPlugin().gameManager:getVariable("stopTime") ~= nil and plugin.getPlugin().gameManager:getVariable("stopTime") > 0 then endOfAbility(player) end
 end
 
 function stopTime(LAPlayer, event, ability, id)
@@ -62,7 +62,7 @@ function stopTime(LAPlayer, event, ability, id)
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
-					plugin.getPlugin().gameManager:setVariable("stopTime", 200)
+					plugin.getPlugin().gameManager:setVariable("stopTime", 100)
 					
 					local players = util.getTableFromList(game.getPlayers())
 					

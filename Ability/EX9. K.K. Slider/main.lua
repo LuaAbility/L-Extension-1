@@ -1,16 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX009-concert", "PlayerInteractEvent", 12000)
+	plugin.registerEvent(abilityData, "EX009-concert", "PlayerInteractEvent", 3000)
 end
 
 function onEvent(funcTable)
 	if funcTable[1] == "EX009-concert" then concertAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
-end
-
-function onTimer(player, ability)
-	if player:getVariable("EX009-cooldown") == nil then 
-		player:setVariable("EX009-cooldown", 0) 
-		game.checkCooldown(player, player, ability, "EX009-concert", false)
-	end
 end
 
 function concertAbility(LAPlayer, event, ability, id)
@@ -18,12 +11,7 @@ function concertAbility(LAPlayer, event, ability, id)
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
-					if game.getPlayer(event:getPlayer()):getVariable("EX009-concert") ~= "true" then
-						game.getPlayer(event:getPlayer()):setVariable("EX009-concert", "true")
-						concert(event:getPlayer())
-					else 
-						game.sendMessage(event:getPlayer(), "§4[§cK.K.§4] §c당신의 콘서트는 이번 게임에서 이미 개최 되었습니다.") 
-					end
+					concert(event:getPlayer())
 				end
 			end
 		end

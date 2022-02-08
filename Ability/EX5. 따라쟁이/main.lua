@@ -1,5 +1,5 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX005-copy", "EntityDamageEvent", 3600)
+	plugin.registerEvent(abilityData, "EX005-copy", "EntityDamageEvent", 900)
 end
 
 function onEvent(funcTable)
@@ -36,8 +36,10 @@ end
 
 function Reset(player, ability)
 	local id = player:getVariable("EX005-copyID")
-	for i = 1, #id do
-		removeAbility(player, id[i])
+	if id ~= nil then
+		for i = 1, #id do
+			removeAbility(player, id[i])
+		end
 	end
 end
 

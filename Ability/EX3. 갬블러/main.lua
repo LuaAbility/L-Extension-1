@@ -7,7 +7,7 @@ function onEvent(funcTable)
 end
 
 function onTimer(player, ability)
-	if player:getVariable("EX003-killPercent") == nil then player:setVariable("EX003-killPercent", 75) end
+	if player:getVariable("EX003-killPercent") == nil then player:setVariable("EX003-killPercent", 50) end
 	local killPercent = player:getVariable("EX003-killPercent")
 	game.sendActionBarMessage(player:getPlayer(), "§a승리 확률 §7: §2" .. killPercent .. "%" .. "§7 / " .. "§c패배 확률 §7: §4" .. (100 - killPercent) .. "%")
 end

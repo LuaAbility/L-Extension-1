@@ -1,3 +1,5 @@
+local effect = import("$.potion.PotionEffectType")
+
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX006-curse", "PlayerDeathEvent", 0)
 end
@@ -21,6 +23,7 @@ function curse(LAPlayer, event, ability, id)
 				damager:getWorld():spawnParticle(import("$.Particle").REDSTONE, damager:getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").PURPLE, 1}))
 				damager:getWorld():playSound(damager:getLocation(), import("$.Sound").BLOCK_BEACON_DEACTIVATE, 2, 0.9)
 				damager:getWorld():playSound(damager:getLocation(), import("$.Sound").ENTITY_ZOMBIE_BREAK_WOODEN_DOOR, 0.3, 1)
+				damager:addPotionEffect(newInstance("$.potion.PotionEffect", {effect.WEAKNESS, 3600, 2}))
 			end
 		end
 	end

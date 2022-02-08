@@ -2,8 +2,8 @@ local attribute = import("$.attribute.Attribute")
 
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX015-saveLoc", "PlayerSwapHandItemsEvent", 0)
-	plugin.registerEvent(abilityData, "EX015-teleportSelf", "PlayerInteractEvent", 900)
-	plugin.registerEvent(abilityData, "EX015-teleportTarget", "EntityDamageEvent", 900)
+	plugin.registerEvent(abilityData, "EX015-teleportSelf", "PlayerInteractEvent", 500)
+	plugin.registerEvent(abilityData, "EX015-teleportTarget", "EntityDamageEvent", 500)
 end
 
 function onEvent(funcTable)

@@ -38,7 +38,7 @@ function checkLives(LAPlayer, event, ability, id)
 						event:getEntity():getWorld():playSound(event:getEntity():getLocation(), import("$.Sound").ITEM_TOTEM_USE, 0.5, 1)
 						event:getEntity():setHealth(2.0)
 						game.getPlayer(event:getEntity()):setVariable("EX004-isResurrection", true)
-						util.runLater(function() game.getPlayer(event:getEntity()):setVariable("EX004-isResurrection", false) end, 60)
+						util.runLater(function() game.getPlayer(event:getEntity()):setVariable("EX004-isResurrection", false) end, 20)
 					else
 						game.getPlayer(event:getEntity()):setVariable("EX004-lives", 9)
 						game.sendMessage(event:getEntity(), "§4[§c구피§4] §c목숨을 모두 소모하여 사망합니다.")	

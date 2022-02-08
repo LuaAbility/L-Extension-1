@@ -22,7 +22,9 @@ function onTimer(player, ability)
 		
 		player:setVariable("EX013-friend", playerName)
 		game.broadcastMessage("§2[§a일심동체§2] " .. playerName .. "§a님이 사망 시 §2" .. player:getPlayer():getName() .. "§a님이 동반 사망합니다.")
-		game.broadcastMessage("§2[§a일심동체§2] " .. player:getPlayer():getName() .. "§a님은 사망 전 까지 모든 데미지를 받지 않습니다.")
+		game.broadcastMessage("§2[§a일심동체§2] " .. player:getPlayer():getName() .. "§a님은 사망 전 까지 모든 데미지를 30%로 줄여 받습니다.")
+		
+		createBossbar(player)
 	end
 	
 	local friend = player:getVariable("EX013-friend")
@@ -32,7 +34,7 @@ end
 function cancelDamage(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
 		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
-			event:setCancelled(true)
+			event:setDamage(event:getDamage() * 0.3)
 		end
 	end
 end
@@ -40,7 +42,7 @@ end
 function checkFriendDead(player, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
 		if player:getVariable("EX013-friend") == event:getEntity():getName() then
-			if game.checkCooldown(LAPlayer, player, ability, id) then
+			if game.checkCooldown(player, player, ability, id) then
 				game.sendMessage(player:getPlayer(), "§4[§c일심동체§4] " .. event:getEntity():getName() .. "§c님이 사망하여 같이 사망합니다.")
 				player:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, player:getPlayer():getLocation():add(0,1,0), 1000, 0.5, 1, 0.5)
 				player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
@@ -49,4 +51,28 @@ function checkFriendDead(player, event, ability, id)
 			end
 		end
 	end
+end
+
+function createBossbar(player)
+	local barText = "§6" .. player:getPlayer():getName() .. " §e: §c" .. player:getVariable("EX013-friend") .. " 사망 시 동반 사망"
+	local friendKey = newInstance("$.NamespacedKey", {plugin.getPlugin(), player:getPlayer():getUniqueId():toString() .. "DRAGON" })
+	local friendBar = plugin.getServer():createBossBar(friendKey, barText, import("$.boss.BarColor").PURPLE, import("$.boss.BarStyle").SEGMENTED_20, { } )
+	local players = util.getTableFromList(game.getPlayers())
+	for i = 1, #players do
+		friendBar:addPlayer(players[i]:getPlayer())
+	end
+	
+	friendBar:setProgress(1)
+	player:setVariable("EX013-friendBar", friendBar)
+end
+
+function removeBossbar(player)
+	local friendBar = player:getVariable("EX013-friendBar")
+	if friendBar ~= nil then
+		friendBar:setVisible(false)
+	end
+end
+
+function Reset(player, ability)
+	removeBossbar(player)
 end

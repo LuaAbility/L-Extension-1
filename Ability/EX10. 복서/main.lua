@@ -15,7 +15,7 @@ end
 function onTimer(player, ability)
 	if player:getVariable("EX010-hit") == nil then 
 		local players = util.getTableFromList(game.getAllPlayers())
-		player:setVariable("EX010-hit", #players * 20) 
+		player:setVariable("EX010-hit", #players * 40) 
 	end
 	
 	local hit = player:getVariable("EX010-hit")

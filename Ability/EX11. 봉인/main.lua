@@ -1,5 +1,5 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX011-lockAbility", "EntityDamageEvent", 2400)
+	plugin.registerEvent(abilityData, "EX011-lockAbility", "EntityDamageEvent", 1800)
 end
 
 function onEvent(funcTable)
@@ -15,7 +15,7 @@ function lockAbility(LAPlayer, event, ability, id)
 		if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 			game.getPlayer(damager):setVariable("abilityLock", true)
 			damagee:sendMessage("§1[§b봉인§1] §b능력을 사용했습니다.")
-			damager:sendMessage("§c능력이 봉인되었습니다! 30초 뒤에 재사용 가능합니다.")
+			damager:sendMessage("§c능력이 봉인되었습니다! 20초 뒤에 재사용 가능합니다.")
 			damager:getWorld():spawnParticle(import("$.Particle").REDSTONE, damager:getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").NAVY, 1}))
 			damager:getWorld():playSound(damager:getLocation(), import("$.Sound").BLOCK_SCULK_SENSOR_CLICKING, 1, 0.5)
 
@@ -24,7 +24,7 @@ function lockAbility(LAPlayer, event, ability, id)
 				damager:sendMessage("§a능력 봉인이 해제되었습니다.")
 				damager:getWorld():spawnParticle(import("$.Particle").REDSTONE, damager:getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").YELLOW, 1}))
 				damager:playSound(damager:getLocation(), import("$.Sound").BLOCK_NOTE_BLOCK_PLING, 1, 2)
-			end, 600)
+			end, 400)
 		end
 	end
 end

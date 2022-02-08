@@ -9,7 +9,6 @@ end
 function onTimer(player, ability)
 	if player:getVariable("EX008-cooldown") == nil then 
 		player:setVariable("EX008-cooldown", 0) 
-		game.checkCooldown(player, player, ability, "EX008-half", false)
 	end
 end
 
@@ -26,14 +25,14 @@ function half(LAPlayer, event, ability, id)
 					event:getPlayer():getWorld():spawnParticle(import("$.Particle").REDSTONE, event:getPlayer():getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").PURPLE, 1}))
 					event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 					event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").BLOCK_PORTAL_TRAVEL, 2, 1)
-					snap() 
+					snap(event:getPlayer()) 
 				end
 			end
 		end
 	end
 end
 
-function snap()
+function snap(caster)
 	local players = util.getTableFromList(game.getPlayers())
 	
 	for i = 1, 100 do
@@ -48,6 +47,6 @@ function snap()
 		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, players[j]:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
 		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, players[j]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 		players[j]:getPlayer():playSound(players[j]:getPlayer():getLocation(), import("$.Sound").BLOCK_PORTAL_TRAVEL, 0.1, 1)
-		players[j]:getPlayer():damage(9999999)
+		players[j]:getPlayer():damage(9999999, caster)
 	end
 end
