@@ -1,14 +1,15 @@
 function Init(abilityData) 
-	plugin.registerEvent(abilityData, "EX020-abilityUse", "PlayerInteractEvent", 100)
+	plugin.registerEvent(abilityData, "능력 셔플", "PlayerInteractEvent", 6000)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX020-abilityUse" then abilityUse(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "능력 셔플" then abilityUse(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability) 
-	if plugin.getPlugin().gameManager:getVariable("EX020-abilityCount") == nil then 
-		plugin.getPlugin().gameManager:setVariable("EX020-abilityCount", 0)
+	if plugin.getPlugin().gameManager:getVariable("EX020-isEnable") == nil then 
+		plugin.getPlugin().gameManager:setVariable("EX020-isEnable", true)
+		ability:setTime("능력 셔플", 0)
 	end
 end
 
@@ -17,6 +18,7 @@ function abilityUse(LAPlayer, event, ability, id)
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
+					LAPlayer:removeVariable("EX020-isEnable")
 					shuffle(LAPlayer)
 				end
 			end
@@ -25,16 +27,6 @@ function abilityUse(LAPlayer, event, ability, id)
 end
 
 function shuffle(lap) 
-	local abilityCount = plugin.getPlugin().gameManager:getVariable("EX020-abilityCount")
-	if abilityCount == nil then
-		plugin.getPlugin().gameManager:setVariable("EX020-abilityCount", 0)
-		abilityCount = 0
-	elseif abilityCount >= 3 then
-		plugin.getPlugin().gameManager:ResignAbility(lap)
-		plugin.getPlugin().gameManager:AssignAbility(lap)
-		return 0
-	end
-	
 	local players = util.getTableFromList(game.getPlayers())
 	local abilities = { }
 	

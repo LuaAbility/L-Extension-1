@@ -1,10 +1,10 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX002-hiding", "PlayerInteractEvent", 1200)
+	plugin.registerEvent(abilityData, "숨기", "PlayerInteractEvent", 1200)
 	plugin.registerEvent(abilityData, "EX002-cancelDamage", "EntityDamageEvent", 0)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX002-hiding" then hiding(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "숨기" then hiding(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 	if funcTable[1] == "EX002-cancelDamage" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then cancelDamage(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
@@ -23,7 +23,7 @@ function Reset(player, ability)
 end
 
 function stopHiding(player)
-	game.sendMessage(player:getPlayer(), "§1[§b그림자§1] §b능력 시전 시간이 종료되었습니다.")	
+	game.sendMessage(player:getPlayer(), "§1[§b그림자§1] §b능력 시전 시간이 종료되었습니다. (숨기)")	
 	player:setVariable("EX002-isInvisible", 0)
 	player:getPlayer():getWorld():playSound(player:getPlayer():getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1.2)
 	player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)

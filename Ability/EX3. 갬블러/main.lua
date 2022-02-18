@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX003-gamble", "EntityDamageEvent", 3600)
+	plugin.registerEvent(abilityData, "겜블링", "EntityDamageEvent", 3600)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX003-gamble" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then gamble(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "겜블링" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then gamble(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)

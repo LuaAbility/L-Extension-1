@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX008-half", "PlayerInteractEvent", 12000)
+	plugin.registerEvent(abilityData, "핑거스냅", "PlayerInteractEvent", 12000)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX008-half" then half(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "핑거스냅" then half(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)

@@ -1,10 +1,10 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX014-stopTime", "PlayerInteractEvent", 2400)
+	plugin.registerEvent(abilityData, "시간 정지", "PlayerInteractEvent", 2400)
 	plugin.registerEvent(abilityData, "EX014-stopMove", "PlayerMoveEvent", 0)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX014-stopTime" then stopTime(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "시간 정지" then stopTime(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 	if funcTable[1] == "EX014-stopMove" then stopMove(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
@@ -50,7 +50,7 @@ function endOfAbility(player)
 		end
 	end
 	
-	game.sendMessage(player:getPlayer(), "§2[§a시간 정지§2] §a능력 시전 시간이 종료되었습니다.") 
+	game.sendMessage(player:getPlayer(), "§2[§a시간 정지§2] §a능력 시전 시간이 종료되었습니다. (시간 정지)") 
 end
 
 function Reset(player, ability)

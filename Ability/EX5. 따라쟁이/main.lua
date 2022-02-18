@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX005-copy", "EntityDamageEvent", 900)
+	plugin.registerEvent(abilityData, "능력 복사", "EntityDamageEvent", 900)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX005-copy" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then copy(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "능력 복사" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then copy(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)

@@ -2,14 +2,14 @@ local attribute = import("$.attribute.Attribute")
 
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX015-saveLoc", "PlayerSwapHandItemsEvent", 0)
-	plugin.registerEvent(abilityData, "EX015-teleportSelf", "PlayerInteractEvent", 500)
-	plugin.registerEvent(abilityData, "EX015-teleportTarget", "EntityDamageEvent", 500)
+	plugin.registerEvent(abilityData, "자가 이동", "PlayerInteractEvent", 500)
+	plugin.registerEvent(abilityData, "강제 이동", "EntityDamageEvent", 500)
 end
 
 function onEvent(funcTable)
 	if funcTable[1] == "EX015-saveLoc" then saveLoc(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
-	if funcTable[1] == "EX015-teleportSelf" then teleportSelf(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
-	if funcTable[1] == "EX015-teleportTarget" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then teleportTarget(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "자가 이동" then teleportSelf(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "강제 이동" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then teleportTarget(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -42,7 +42,7 @@ function teleportSelf(LAPlayer, event, ability, id)
 		if event:getPlayer():getInventory():getItemInMainHand() ~= nil then
 			if game.isAbilityItem(event:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
-					game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, "EX015-teleportTarget", false)
+					game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, "강제 이동", false)
 					teleport(game.getPlayer(event:getPlayer()), event:getPlayer(), ability)
 				end
 			end
@@ -55,7 +55,7 @@ function teleportTarget(LAPlayer, event, ability, id)
 		local item = event:getDamager():getInventory():getItemInMainHand()
 		if game.isAbilityItem(item, "IRON_INGOT") then
 			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
-				game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, "EX015-teleportSelf", false)
+				game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, "자가 이동", false)
 				teleport(game.getPlayer(event:getDamager()), event:getEntity(), ability)
 			end
 		end

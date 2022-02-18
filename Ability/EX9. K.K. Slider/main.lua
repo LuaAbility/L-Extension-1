@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX009-concert", "PlayerInteractEvent", 3000)
+	plugin.registerEvent(abilityData, "콘서트 개최", "PlayerInteractEvent", 3000)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX009-concert" then concertAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "콘서트 개최" then concertAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function concertAbility(LAPlayer, event, ability, id)

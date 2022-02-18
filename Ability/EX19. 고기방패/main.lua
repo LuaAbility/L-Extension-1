@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX019-swap", "EntityDamageEvent", 3000)
+	plugin.registerEvent(abilityData, "친구 소환", "EntityDamageEvent", 3000)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX019-swap" then swap(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "친구 소환" then swap(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function swap(LAPlayer, event, ability, id)

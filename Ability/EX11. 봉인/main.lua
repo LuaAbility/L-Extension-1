@@ -1,9 +1,9 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX011-lockAbility", "EntityDamageEvent", 1800)
+	plugin.registerEvent(abilityData, "능력 봉인", "EntityDamageEvent", 1800)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX011-lockAbility" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then lockAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "능력 봉인" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then lockAbility(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function lockAbility(LAPlayer, event, ability, id)
