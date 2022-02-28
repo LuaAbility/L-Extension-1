@@ -1,5 +1,5 @@
 function Init(abilityData) 
-	plugin.registerEvent(abilityData, "능력 셔플", "PlayerInteractEvent", 6000)
+	plugin.registerEvent(abilityData, "능력 셔플", "PlayerInteractEvent", 0)
 end
 
 function onEvent(funcTable)
@@ -7,9 +7,36 @@ function onEvent(funcTable)
 end
 
 function onTimer(player, ability) 
-	if plugin.getPlugin().gameManager:getVariable("EX020-isEnable") == nil then 
-		plugin.getPlugin().gameManager:setVariable("EX020-isEnable", true)
-		ability:setTime("능력 셔플", 0)
+	local count = player:getVariable("EX020-abilityTime")
+	if count == nil then 
+		player:setVariable("EX020-abilityTime", 6000)
+		count = 6000
+	end
+	
+	if count > 0 then
+		count = count - 2
+		
+		if count == 0 then
+            game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b재사용 대기시간이 종료되었습니다. (능력 셔플)")
+            player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_PLAYER_LEVELUP, 0.5, 2)
+        elseif count == 20 then
+			game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b남은 시간 : 1초 (능력 셔플)")
+			player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_EXPERIENCE_ORB_PICKUP, 0.5, 2)
+        elseif count == 40 then
+			game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b남은 시간 : 2초 (능력 셔플)")
+			player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_EXPERIENCE_ORB_PICKUP, 0.5, 2)
+        elseif count == 60 then
+			game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b남은 시간 : 3초 (능력 셔플)");
+			player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_EXPERIENCE_ORB_PICKUP, 0.5, 2)
+        elseif count == 80 then
+			game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b남은 시간 : 4초 (능력 셔플)")
+			player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_EXPERIENCE_ORB_PICKUP, 0.5, 2)
+        elseif count == 100 then
+			game.sendMessage(player:getPlayer(), "§1[§b셔플§1] §b남은 시간 : 5초 (능력 셔플)")
+			player:getPlayer():playSound(player:getPlayer(), import("$.Sound").ENTITY_EXPERIENCE_ORB_PICKUP, 0.5, 2)
+		end
+        
+		player:setVariable("EX020-abilityTime", count)
 	end
 end
 
@@ -18,8 +45,15 @@ function abilityUse(LAPlayer, event, ability, id)
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
-					LAPlayer:removeVariable("EX020-isEnable")
-					shuffle(LAPlayer)
+					local count = LAPlayer:getVariable("EX020-abilityTime")
+					if count then
+						if count <= 0 then
+							LAPlayer:setVariable("EX020-abilityTime", 6000)
+							shuffle(LAPlayer)
+						else
+							game.sendMessage(event:getPlayer(), "§1[§b셔플§1] §b재사용 대기시간 입니다. (" .. (count / 20) .. "초 / 능력 셔플)" )
+						end
+					end
 				end
 			end
 		end
@@ -31,9 +65,10 @@ function shuffle(lap)
 	local abilities = { }
 	
 	for i = 1, #players do
-		table.insert(abilities, players[i]:getAbility():clone())
+		if game.targetPlayer(lap, players[i], false) then
+			table.insert(abilities, players[i]:getAbility():clone())
+		end
 	end
-	
 	
 	for i = 1, 100 do
 		local randomIndex = util.random(1, #abilities)
@@ -42,10 +77,12 @@ function shuffle(lap)
 		abilities[1] = temp
 	end
 	
+	local j = 1
 	for i = 1, #players do
-		util.runLater(function() players[i]:changeAbility(abilities[i]) end, 3)
+		if game.targetPlayer(lap, players[i], false) then
+			util.runLater(function() players[i]:changeAbility(abilities[j]) j = j + 1 end, 1)
+		end
 	end
 	
-	plugin.getPlugin().gameManager:setVariable("EX020-abilityCount", abilityCount + 1)
 	game.broadcastMessage("§2셔플 §a능력에 의해 모든 플레이어의 능력이 섞입니다!")
 end

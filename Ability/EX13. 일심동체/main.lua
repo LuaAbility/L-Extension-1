@@ -41,7 +41,8 @@ end
 
 function checkFriendDead(player, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
-		if player:getVariable("EX013-friend") == event:getEntity():getName() then
+		local players = util.getTableFromList(game.getPlayers())
+		if player:getVariable("EX013-friend") == event:getEntity():getName() and #players > 2 then
 			if game.checkCooldown(player, player, ability, id) then
 				game.sendMessage(player:getPlayer(), "§4[§c일심동체§4] " .. event:getEntity():getName() .. "§c님이 사망하여 같이 사망합니다.")
 				player:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, player:getPlayer():getLocation():add(0,1,0), 1000, 0.5, 1, 0.5)

@@ -53,7 +53,7 @@ end
 function teleportTarget(LAPlayer, event, ability, id)
 	if event:getDamager():getType():toString() == "PLAYER" and event:getEntity():getType():toString() == "PLAYER" then
 		local item = event:getDamager():getInventory():getItemInMainHand()
-		if game.isAbilityItem(item, "IRON_INGOT") then
+		if game.isAbilityItem(item, "IRON_INGOT") and game.targetPlayer(LAPlayer, game.getPlayer(event:getEntity())) then
 			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 				game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, "자가 이동", false)
 				teleport(game.getPlayer(event:getDamager()), event:getEntity(), ability)
@@ -73,8 +73,8 @@ function teleport(player, target, ability)
 		target:getWorld():playSound(target:getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
 		game.sendMessage(target, "§2트랜스볼 §a능력의 영향으로 지정된 좌표로 이동합니다.")
 	else 
-		ability:resetCooldown(EX015-teleportSelf)
-		ability:resetCooldown(EX015-teleportTarget)
+		ability:resetCooldown("EX015-teleportSelf")
+		ability:resetCooldown("EX015-teleportTarget")
 		game.sendMessage(player:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 	end
 end
@@ -85,5 +85,4 @@ function worldInfo(info)
 	if info:toString() == "THE_END" then return "엔드" end
 	if info:toString() == "NORMAL" then return "일반" end
 	if info:toString() == "CUSTOM" then return "???" end
-	
 end

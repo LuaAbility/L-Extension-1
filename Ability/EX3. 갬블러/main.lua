@@ -17,40 +17,44 @@ function gamble(LAPlayer, event, ability, id)
 		local item = event:getDamager():getInventory():getItemInMainHand()
 		if game.isAbilityItem(item, "IRON_INGOT") then
 			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
-				local killPercent = game.getPlayer(event:getDamager()):getVariable("EX003-killPercent")
-				game.sendMessage(event:getEntity(), "§a갬블러가 게임을 신청하였습니다.")	
-				game.sendMessage(event:getEntity(), "§a승리 확률 §7: §2" .. (100 - killPercent) .. "%" .. "§7 / " .. "§c패배 확률 §7: §4" .. killPercent .. "%")	
-				event:getDamager():getWorld():playSound(event:getDamager():getLocation(), import("$.Sound").BLOCK_PORTAL_TRIGGER, 1, 1)
-				
-				for i = 1, 5 do
-					util.runLater(function() 
-						event:getDamager():getWorld():playSound(event:getDamager():getLocation(), import("$.Sound").ITEM_FLINTANDSTEEL_USE, 0.5, 1)
-						event:getEntity():getWorld():playSound(event:getEntity():getLocation(), import("$.Sound").ITEM_FLINTANDSTEEL_USE, 0.5, 1)
-						
-						event:getDamager():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getDamager():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
-						event:getEntity():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getEntity():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
-					end, (i - 1) * 20)
-				end
-			
-				util.runLater(function() 
+				if game.targetPlayer(game.getPlayer(event:getDamager()), game.getPlayer(event:getEntity())) then
+					local killPercent = game.getPlayer(event:getDamager()):getVariable("EX003-killPercent")
+					game.sendMessage(event:getEntity(), "§a갬블러가 게임을 신청하였습니다.")	
+					game.sendMessage(event:getEntity(), "§a승리 확률 §7: §2" .. (100 - killPercent) .. "%" .. "§7 / " .. "§c패배 확률 §7: §4" .. killPercent .. "%")	
+					event:getDamager():getWorld():playSound(event:getDamager():getLocation(), import("$.Sound").BLOCK_PORTAL_TRIGGER, 1, 1)
 					
-					local randomNumber = util.random(1, 100)
-					if randomNumber <= killPercent then 
-						event:getEntity():getWorld():strikeLightningEffect(event:getEntity():getLocation())
-						event:getEntity():damage(9999999, event:getDamager())
-						game.sendMessage(event:getDamager(), "§2[§a갬블러§2] §a승리하셨습니다.")	
-						game.sendMessage(event:getEntity(), "§c갬블러에게 패배하셨습니다.")	
-						
-						killPercent = killPercent - util.random(10, 20)
-						if killPercent < 10 then killPercent = 10 end
-						game.getPlayer(event:getDamager()):setVariable("EX003-killPercent", killPercent)
-					else 
-						event:getDamager():getWorld():strikeLightningEffect(event:getDamager():getLocation())
-						event:getDamager():damage(9999999, event:getEntity())
-						game.sendMessage(event:getEntity(), "§a갬블러에게 승리하셨습니다.")	
-						game.sendMessage(event:getDamager(), "§4[§c갬블러§4] §c패배하셨습니다.")	
+					for i = 1, 5 do
+						util.runLater(function() 
+							event:getDamager():getWorld():playSound(event:getDamager():getLocation(), import("$.Sound").ITEM_FLINTANDSTEEL_USE, 0.5, 1)
+							event:getEntity():getWorld():playSound(event:getEntity():getLocation(), import("$.Sound").ITEM_FLINTANDSTEEL_USE, 0.5, 1)
+							
+							event:getDamager():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getDamager():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
+							event:getEntity():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getEntity():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
+						end, (i - 1) * 20)
 					end
-				end, 100)
+				
+					util.runLater(function() 
+						
+						local randomNumber = util.random(1, 100)
+						if randomNumber <= killPercent then 
+							event:getEntity():getWorld():strikeLightningEffect(event:getEntity():getLocation())
+							event:getEntity():damage(9999999, event:getDamager())
+							game.sendMessage(event:getDamager(), "§2[§a갬블러§2] §a승리하셨습니다.")	
+							game.sendMessage(event:getEntity(), "§c갬블러에게 패배하셨습니다.")	
+							
+							killPercent = killPercent - util.random(10, 20)
+							if killPercent < 10 then killPercent = 10 end
+							game.getPlayer(event:getDamager()):setVariable("EX003-killPercent", killPercent)
+						else 
+							event:getDamager():getWorld():strikeLightningEffect(event:getDamager():getLocation())
+							event:getDamager():damage(9999999, event:getEntity())
+							game.sendMessage(event:getEntity(), "§a갬블러에게 승리하셨습니다.")	
+							game.sendMessage(event:getDamager(), "§4[§c갬블러§4] §c패배하셨습니다.")	
+						end
+					end, 100)
+				else
+					ability:resetCooldown(id)
+				end
 			end
 		end
 	end

@@ -22,9 +22,9 @@ end
 function stopMove(player, event, ability, id)
 	local stop = plugin.getPlugin().gameManager:getVariable("stopTime")
 	if stop ~= nil and stop > 0 then
-		if game.getPlayer(event:getPlayer()) ~= player and game.getPlayer(event:getPlayer()).isSurvive then
+		if game.getPlayer(event:getPlayer()) ~= player and game.targetPlayer(player, game.getPlayer(event:getPlayer()), false) then
 			event:setCancelled(true)
-			game.sendMessage(event:getPlayer(), "§4시간 정지 §c능력에 의해 이동하실 수 없습니다. (남은 시간 : " .. stop / 20.0 .. "s)")
+			game.sendActionBarMessage(event:getPlayer(), "§4시간 정지 §c능력에 의해 이동하실 수 없습니다. (남은 시간 : " .. stop / 20.0 .. "s)")
 		end
 	end
 end
@@ -32,7 +32,7 @@ end
 function cancelVelocity(player)
 	local players = util.getTableFromList(game.getPlayers())
 	for i = 1, #players do
-		if players[i] ~= player then
+		if players[i] ~= player and game.targetPlayer(player, players[i], false) then
 			players[i]:getPlayer():setVelocity(newInstance("$.util.Vector", {0, 0, 0}))
 		end
 	end
@@ -41,7 +41,7 @@ end
 function endOfAbility(player)
 	local players = util.getTableFromList(game.getPlayers())
 	for i = 1, #players do
-		if players[i] ~= player then
+		if players[i] ~= player and game.targetPlayer(player, players[i], false) then
 			players[i]:removeVariable("abilityLock")
 			players[i]:getPlayer():getWorld():playSound(players[i]:getPlayer():getLocation(), import("$.Sound").BLOCK_GLASS_BREAK, 2, 1.2)
 			players[i]:getPlayer():getWorld():playSound(players[i]:getPlayer():getLocation(), import("$.Sound").BLOCK_BELL_USE, 1, 1)
@@ -71,7 +71,7 @@ function stopTime(LAPlayer, event, ability, id)
 					event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").BLOCK_BELL_USE, 2, 1)
 					
 					for i = 1, #players do
-						if players[i] ~= game.getPlayer(event:getPlayer()) then
+						if players[i] ~= game.getPlayer(event:getPlayer()) and game.targetPlayer(LAPlayer, players[i], false) then
 							game.sendMessage(players[i]:getPlayer(), "§4시간 정지 §c능력에 의해 이동, 능력이 봉인됩니다.")
 							players[i]:setVariable("abilityLock", true)
 							players[i]:getPlayer():getWorld():playSound(players[i]:getPlayer():getLocation(), import("$.Sound").BLOCK_BELL_RESONATE, 2, 1)

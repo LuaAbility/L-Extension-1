@@ -43,10 +43,14 @@ function snap(caster)
 	end
 	
 	for j = 1, (#players / 2) do
-		game.sendMessage(players[j]:getPlayer(), "§c핑거스냅 능력으로 인해 치명적인 데미지를 입습니다.")
-		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, players[j]:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
-		players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, players[j]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
-		players[j]:getPlayer():playSound(players[j]:getPlayer():getLocation(), import("$.Sound").BLOCK_PORTAL_TRAVEL, 0.1, 1)
-		players[j]:getPlayer():damage(9999999, caster)
+		if game.targetPlayer(game.getPlayer(caster), players[j], false) then
+			game.sendMessage(players[j]:getPlayer(), "§c핑거스냅 능력으로 인해 곧 큰 폭발이 일어납니다!")
+			players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, players[j]:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
+			players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, players[j]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
+			players[j]:getPlayer():playSound(players[j]:getPlayer():getLocation(), import("$.Sound").BLOCK_PORTAL_TRAVEL, 0.1, 1)
+			util.runLater(function() 
+				players[j]:getPlayer():getLocation():getWorld():createExplosion(players[j]:getPlayer():getLocation(), 10.0)
+			end, 60)
+		end
 	end
 end
