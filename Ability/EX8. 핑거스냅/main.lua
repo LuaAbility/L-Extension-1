@@ -1,3 +1,5 @@
+local attribute = import("$.attribute.Attribute")
+
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "핑거스냅", "PlayerInteractEvent", 12000)
 end
@@ -19,6 +21,7 @@ function half(LAPlayer, event, ability, id)
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 					if LAPlayer:getVariable("EX008-used") then
 						LAPlayer:setVariable("EX008-used", true)
+						event:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(6)
 						event:getPlayer():getWorld():spawnParticle(import("$.Particle").REDSTONE, event:getPlayer():getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").RED, 1}))
 						event:getPlayer():getWorld():spawnParticle(import("$.Particle").REDSTONE, event:getPlayer():getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").ORANGE, 1}))
 						event:getPlayer():getWorld():spawnParticle(import("$.Particle").REDSTONE, event:getPlayer():getLocation():add(0,1,0), 300, 0.5, 1, 0.5, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").YELLOW, 1}))
@@ -35,6 +38,10 @@ function half(LAPlayer, event, ability, id)
 			end
 		end
 	end
+end
+
+function Reset(player, ability)
+	player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):getDefaultValue())
 end
 
 function snap(caster)
