@@ -16,7 +16,7 @@ function curse(LAPlayer, event, ability, id)
 		local damager = damageEvent:getDamager()
 		if damageEvent:getCause():toString() == "PROJECTILE" then damager = damageEvent:getDamager():getShooter() end
 		
-		if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
+		if not util.hasClass(damager, "org.bukkit.projectiles.BlockProjectileSource") and damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
 			if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 				game.broadcastMessage("§4[§cLAbility§4] " .. damager:getName() .. "§c님은 §4" .. damagee:getName() .. "§c님에게 저주를 받아 모든 능력을 잃습니다.")
 				util.runLater(function() game.removeAbility(game.getPlayer(damager), ability, true) end, 1)

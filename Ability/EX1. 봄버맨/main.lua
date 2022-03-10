@@ -11,12 +11,12 @@ end
 function onTimer(player, ability)
 	if player:getVariable("EX001-passiveCount") == nil then 
 		player:setVariable("EX001-passiveCount", 0) 
-		player:setVariable("EX001-bomb", 5) 
+		player:setVariable("EX001-bomb", 1) 
 		player:setVariable("EX001-tnt", {}) 
 	end
 	local count = player:getVariable("EX001-passiveCount")
 	game.sendActionBarMessage(player:getPlayer(), "§a폭탄 §6: §b" .. player:getVariable("EX001-bomb") .. "개")
-	if count >= 200 then 
+	if count >= 400 then 
 		count = 0
 		addBomb(player)
 	end
@@ -72,7 +72,7 @@ end
 function addBomb(player)
 	local bomb = player:getVariable("EX001-bomb")
 	if bomb == nil then player:setVariable("EX001-bomb", 5) bomb = 5 end
-	if bomb < 5 then
+	if bomb < 3 then
 		bomb = bomb + 1
 		player:setVariable("EX001-bomb", bomb)
 	end

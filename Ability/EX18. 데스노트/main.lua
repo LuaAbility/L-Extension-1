@@ -25,7 +25,7 @@ function deathNote(LAPlayer, event, ability, id)
 					targetPlayer:setHealth(0)
 					targetPlayer:getWorld():strikeLightningEffect(targetPlayer:getLocation())
 					targetPlayer:getWorld():spawnParticle(import("$.Particle").EXPLOSION_HUGE, targetPlayer:getLocation():add(0,1,0), 1, 4, 1, 4, 0.05)
-					targetPlayer:getWorld():createExplosion(targetPlayer:getLocation(), 5)
+					targetPlayer:getWorld():createExplosion(targetPlayer:getLocation(), 2.5)
 					
 					game.sendMessage(targetPlayer, "§8데스노트 §7능력으로 인해 즉사합니다.")
 					game.sendMessage(event:getPlayer(), "§8[§7데스노트§8] §7능력이 발동되어 능력이 제거됩니다.")

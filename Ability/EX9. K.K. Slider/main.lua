@@ -29,7 +29,7 @@ function concert(p)
 	targetVec:setZ(targetVec:getZ() + playerEye:getZ())
 	
 	playerLoc:setX(targetVec:getX())
-	playerLoc:setY(targetVec:getY())
+	playerLoc:setY(targetVec:getY() - 1)
 	playerLoc:setZ(targetVec:getZ())
 	
 	local players = util.getTableFromList(game.getPlayers())

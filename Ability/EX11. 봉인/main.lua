@@ -11,7 +11,7 @@ function lockAbility(LAPlayer, event, ability, id)
 	local damager = event:getDamager()
 	if damager:getType():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
 	
-	if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
+	if not util.hasClass(damager, "org.bukkit.projectiles.BlockProjectileSource") and damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
 		if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 			game.getPlayer(damager):setVariable("abilityLock", true)
 			damagee:sendMessage("§1[§b봉인§1] §b능력을 사용했습니다.")

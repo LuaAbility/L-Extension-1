@@ -13,7 +13,7 @@ function reflection(LAPlayer, event, ability, id)
 	local damager = event:getDamager()
 	if damager:getType():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
 	
-	if damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
+	if not util.hasClass(damager, "org.bukkit.projectiles.BlockProjectileSource") and damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
 		if damagee:getHealth() - event:getDamage() <= 0 then
 			if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 				game.sendMessage(damager, "§c미러링 능력에 의해 즉사합니다.")
