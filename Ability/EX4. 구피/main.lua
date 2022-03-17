@@ -10,8 +10,8 @@ end
 
 function onTimer(player, ability)
 	if player:getVariable("EX004-lives") == nil then
-		player:getPlayer():setHealth(2.0)
-		player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(2.0)
+		player:getPlayer():setHealth(game.getMaxHealth() * 0.1)
+		player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(game.getMaxHealth() * 0.1)
 		player:setVariable("EX004-lives", 9)
 		player:setVariable("EX004-isResurrection", false) 
 	end

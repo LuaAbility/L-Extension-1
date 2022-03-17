@@ -20,7 +20,7 @@ function onTimer(player, ability)
 		count = 0
 		addBomb(player)
 	end
-	count = count + 2
+	count = count + 1
 	player:setVariable("EX001-passiveCount", count)
 end
 

@@ -12,7 +12,7 @@ function onTimer(player, ability)
 	if player:getVariable("EX002-isInvisible") == nil then player:setVariable("EX002-isInvisible", 0) end
 	local count = player:getVariable("EX002-isInvisible")
 	if count > 0 then 
-		count = count - 2 
+		count = count - 1 
 		if count <= 0 then stopHiding(player) end
 	end
 	player:setVariable("EX002-isInvisible", count)

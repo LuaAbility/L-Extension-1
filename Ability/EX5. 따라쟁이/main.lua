@@ -17,7 +17,7 @@ function onTimer(player, ability)
 	local removalIndex = 0
 	for i = 1, #count do
 		if count[i] > 0 then 
-			count[i] = count[i] - 2 
+			count[i] = count[i] - 1 
 			if count[i] <= 0 then 
 				removeAbility(player, id[i]) 
 				removalIndex = i

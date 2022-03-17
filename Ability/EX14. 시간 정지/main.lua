@@ -12,7 +12,7 @@ function onTimer(player, ability)
 	if plugin.getPlugin().gameManager:getVariable("stopTime") == nil then plugin.getPlugin().gameManager:setVariable("stopTime", 0) end
 	local count = plugin.getPlugin().gameManager:getVariable("stopTime")
 	if count > 0 then 
-		count = count - 2 
+		count = count - 1 
 		if count <= 0 then endOfAbility(player)
 		else cancelVelocity(player) end
 	end
