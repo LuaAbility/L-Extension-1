@@ -30,7 +30,7 @@ function stopMove(player, event, ability, id)
 end
 
 function cancelVelocity(player)
-	local players = util.getTableFromList(game.getPlayers())
+	local players = util.getTableFromList(game.getTeamManager():getOpponentTeam(player, false))
 	for i = 1, #players do
 		if players[i] ~= player and game.targetPlayer(player, players[i], false) then
 			players[i]:getPlayer():setVelocity(newInstance("$.util.Vector", {0, 0, 0}))
@@ -39,7 +39,7 @@ function cancelVelocity(player)
 end
 
 function endOfAbility(player)
-	local players = util.getTableFromList(game.getPlayers())
+	local players = util.getTableFromList(game.getTeamManager():getOpponentTeam(player, false))
 	for i = 1, #players do
 		if players[i] ~= player and game.targetPlayer(player, players[i], false) then
 			players[i]:removeVariable("abilityLock")
@@ -64,7 +64,7 @@ function stopTime(LAPlayer, event, ability, id)
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 					plugin.getPlugin().gameManager:setVariable("stopTime", 100)
 					
-					local players = util.getTableFromList(game.getPlayers())
+					local players = util.getTableFromList(game.getTeamManager():getOpponentTeam(LAPlayer, false))
 					
 					event:getPlayer():getWorld():spawnParticle(import("$.Particle").REDSTONE, event:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.5, newInstance("$.Particle$DustOptions", {import("$.Color").AQUA, 1}))
 					event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.1)

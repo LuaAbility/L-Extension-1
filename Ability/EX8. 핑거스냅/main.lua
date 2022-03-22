@@ -55,7 +55,7 @@ function snap(caster)
 	end
 	
 	for j = 1, (#players / 2) do
-		if game.targetPlayer(game.getPlayer(caster), players[j], false) then
+		if game.targetPlayer(game.getPlayer(caster), players[j], false, true) then
 			game.sendMessage(players[j]:getPlayer(), "§c핑거스냅 능력으로 인해 곧 큰 폭발이 일어납니다!")
 			players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").PORTAL, players[j]:getPlayer():getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
 			players[j]:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, players[j]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
