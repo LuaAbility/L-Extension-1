@@ -1,3 +1,5 @@
+local attribute = import("$.attribute.Attribute")
+
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX013-cancelDamage", "EntityDamageEvent", 0)
 	plugin.registerEvent(abilityData, "EX013-checkFriendDead", "PlayerDeathEvent", 0)
@@ -22,19 +24,25 @@ function onTimer(player, ability)
 		
 		player:setVariable("EX013-friend", playerName)
 		game.broadcastMessage("§2[§a일심동체§2] " .. playerName .. "§a님이 사망 시 §2" .. player:getPlayer():getName() .. "§a님이 동반 사망합니다.")
-		game.broadcastMessage("§2[§a일심동체§2] " .. player:getPlayer():getName() .. "§a님은 사망 전 까지 모든 데미지를 30%로 줄여 받습니다.")
+		game.broadcastMessage("§2[§a일심동체§2] " .. player:getPlayer():getName() .. "§a님은 사망 전 까지 모든 데미지를 50%로 줄여 받습니다.")
 		
 		createBossbar(player)
 	end
 	
 	local friend = player:getVariable("EX013-friend")
-	game.sendActionBarMessage(player:getPlayer(), "§e일심동체 §7: §6" .. friend)
+	game.sendActionBarMessage(player:getPlayer(), "EX013", "§e일심동체 §7: §6" .. friend)
+	
+	if #util.getTableFromList(game.getPlayers()) <= 2 then
+		game.removeAbility(player, ability, false)
+		player:getPlayer():getAttribute(attribute.GENERIC_MAX_HEALTH):setBaseValue(game.getMaxHealth() * 2)
+		game.broadcastMessage("§2[§a일심동체§2] §a게임 인원이 2명이 되어 일심동체 능력이 제거됩니다.")
+	end
 end
 
 function cancelDamage(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
 		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
-			event:setDamage(event:getDamage() * 0.3)
+			event:setDamage(event:getDamage() * 0.5)
 		end
 	end
 end
@@ -76,4 +84,5 @@ end
 
 function Reset(player, ability)
 	removeBossbar(player)
+	game.sendActionBarMessageToAll("EX013", "")
 end

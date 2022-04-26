@@ -8,7 +8,7 @@ end
 
 function swap(LAPlayer, event, ability, id)
 	if event:getEntity():getType():toString() == "PLAYER" then
-		if event:getEntity():getHealth() - event:getDamage() <= 0 then
+		if event:getEntity():getHealth() - event:getFinalDamage() <= 0 then
 			if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 				
 				event:setCancelled(true)

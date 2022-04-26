@@ -1,14 +1,25 @@
 function Init(abilityData)
-	plugin.registerEvent(abilityData, "EX017-enable", "PlayerInteractEvent", 0)
+	plugin.registerEvent(abilityData, "푸쉬", "PlayerInteractEvent", 1000)
 end
 
 function onEvent(funcTable)
-	if funcTable[1] == "EX017-enable" then enable(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "푸쉬" then enable(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
-	if player:getVariable("EX017-useAbility") == nil then player:getVariable("EX017-useAbility", true) end
-	if player:getVariable("EX017-useAbility") then push(player) end
+	if player:getVariable("EX017-useAbility") == nil then player:setVariable("EX017-useAbility", 0) end
+	if player:getVariable("EX017-useAbility") > 0 then 
+		push(player) 
+		game.sendActionBarMessage(player:getPlayer(), "EX017", "§b푸쉬 §f: §a" .. math.ceil(player:getVariable("EX017-useAbility") / 20) .. "초")
+		player:setVariable("EX017-useAbility", player:getVariable("EX017-useAbility") - 1)
+		player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 3, 0.5, 1, 0.5, 0.05)
+	else
+		game.sendActionBarMessage(player:getPlayer(), "EX017", "")
+	end
+end
+
+function Reset(player, ability)
+	game.sendActionBarMessageToAll("EX017", "")
 end
 
 function push(player)
@@ -41,12 +52,7 @@ function enable(LAPlayer, event, ability, id)
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 					if game.getPlayer(event:getPlayer()):getVariable("EX017-useAbility") then
-						game.getPlayer(event:getPlayer()):setVariable("EX017-useAbility", false)
-						game.sendMessage(event:getPlayer(), "§2[§a푸쉬§2] §a능력을 비활성화했습니다.")
-						event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 100, 0.5, 1, 0.5, 0.05)
-					else
-						game.getPlayer(event:getPlayer()):setVariable("EX017-useAbility", true)
-						game.sendMessage(event:getPlayer(), "§2[§a푸쉬§2] §a능력을 활성화했습니다.")
+						game.getPlayer(event:getPlayer()):setVariable("EX017-useAbility", 200)
 						event:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, event:getPlayer():getLocation():add(0,1,0), 100, 0.5, 1, 0.5, 0.05)
 					end
 				end

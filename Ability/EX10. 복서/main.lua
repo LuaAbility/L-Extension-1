@@ -15,11 +15,11 @@ end
 function onTimer(player, ability)
 	if player:getVariable("EX010-hit") == nil then 
 		local players = util.getTableFromList(game.getAllPlayers())
-		player:setVariable("EX010-hit", #players * 40) 
+		player:setVariable("EX010-hit", #players * 70) 
 	end
 	
 	local hit = player:getVariable("EX010-hit")
-	game.sendActionBarMessage(player:getPlayer(), "§a남은 타격 횟수 §6: §b" .. hit .. "회")
+	game.sendActionBarMessage(player:getPlayer(), "EX010", "§a남은 타격 횟수 §6: §b" .. hit .. "회")
 end
 
 function Reset(player, ability)
@@ -28,6 +28,7 @@ function Reset(player, ability)
 	for i = 1, #players do
 		players[i]:getPlayer():setMaximumNoDamageTicks(12) 
 	end
+	game.sendActionBarMessageToAll("EX010", "")
 end
 
 function setAttackSpeed(item, event, ability, id)
@@ -45,6 +46,7 @@ function removeTicks(LAPlayer, event, ability, id)
 		if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 			if game.isAbilityItem(item, "IRON_INGOT") and hit ~= nil and hit > 0 then
 				game.getPlayer(event:getDamager()):setVariable("EX010-hit", hit - 1)
+				event:setDamage(2)
 				event:getEntity():setMaximumNoDamageTicks(0)
 				util.runLater(function() 
 					event:getEntity():setMaximumNoDamageTicks(12) 

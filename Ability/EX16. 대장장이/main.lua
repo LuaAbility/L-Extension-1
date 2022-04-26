@@ -17,7 +17,7 @@ function reinforce(LAPlayer, event, ability, id)
 							if weaponDamage(targetItem:getType()) > 1 then
 								local materialItem = { newInstance("$.inventory.ItemStack", { event:getPlayer():getInventory():getItemInMainHand():getType(), 1}) }
 								
-								game.sendActionBarMessage(event:getPlayer(), "§a강화 중...")
+								game.sendActionBarMessage(event:getPlayer(), "EX014", "§a강화 중...")
 								effect(event:getPlayer())
 									
 								util.runLater(function() effect(event:getPlayer()) end, 10)
@@ -29,12 +29,12 @@ function reinforce(LAPlayer, event, ability, id)
 										event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").ENTITY_ITEM_BREAK, 1, 1.2)
 										event:getPlayer():getWorld():spawnParticle(import("$.Particle").ITEM_CRACK, event:getPlayer():getLocation():add(0,1,0), 200, 0.1, 0.1, 0.1, 0.05, targetItem)
 										game.sendMessage(event:getPlayer(), "§4[§c대장장이§4] §c강화에 실패하여 아이템이 파괴되었습니다.")
-										game.sendActionBarMessage(event:getPlayer(), "§c강화 실패!")
+										game.sendActionBarMessage(event:getPlayer(), "EX014", "§c강화 실패!", 20)
 										event:getPlayer():getInventory():setItemInOffHand(nil)
 									else
 										event:getPlayer():getInventory():removeItem( materialItem )
 										game.sendMessage(event:getPlayer(), "§2[§a대장장이§2] §a강화에 성공했습니다! §6(★" .. (result - 1) .. " -> ★" .. result .. ")")
-										game.sendActionBarMessage(event:getPlayer(), "§6강화 성공!")
+										game.sendActionBarMessage(event:getPlayer(), "EX014", "§6강화 성공!", 20)
 										event:getPlayer():getWorld():spawnParticle(import("$.Particle").VILLAGER_HAPPY, event:getPlayer():getLocation():add(0,1,0), 100, 0.5, 1, 0.5, 0.05)
 										if result < 5 then event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").ENTITY_VILLAGER_YES, 0.25, 1)
 										else event:getPlayer():getWorld():playSound(event:getPlayer():getLocation(), import("$.Sound").UI_TOAST_CHALLENGE_COMPLETE, 1, 1) end 
@@ -53,6 +53,10 @@ function effect(p)
 	p:getWorld():spawnParticle(import("$.Particle").LAVA, p:getLocation():add(0,1,0), 20, 0.5, 0.5, 0.5, 0.5)
 	p:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, p:getLocation():add(0,1,0), 50, 0.5, 0.5, 0.5, 0.05)
 	p:getWorld():playSound(p:getLocation(), import("$.Sound").BLOCK_ANVIL_PLACE, 0.5, 1.6)
+end
+
+function Reset(player, ability)
+	game.sendActionBarMessageToAll("EX016", "")
 end
 
 function starForce(targetItem)

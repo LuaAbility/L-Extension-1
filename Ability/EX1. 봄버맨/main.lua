@@ -2,10 +2,12 @@ local types = import("$.entity.EntityType")
 
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX001-summonTNT", "PlayerInteractEvent", 10)
+	plugin.registerEvent(abilityData, "EX001-weakTNT", "EntityDamageEvent", 0)
 end
 
 function onEvent(funcTable)
 	if funcTable[1] == "EX001-summonTNT" then summonTNT(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
+	if funcTable[1] == "EX001-weakTNT" and funcTable[2]:getEventName() == "EntityDamageByEntityEvent" then weakTNT(funcTable[3], funcTable[2], funcTable[4], funcTable[1]) end
 end
 
 function onTimer(player, ability)
@@ -15,13 +17,23 @@ function onTimer(player, ability)
 		player:setVariable("EX001-tnt", {}) 
 	end
 	local count = player:getVariable("EX001-passiveCount")
-	game.sendActionBarMessage(player:getPlayer(), "§a폭탄 §6: §b" .. player:getVariable("EX001-bomb") .. "개")
+	game.sendActionBarMessage(player:getPlayer(), "EX001", "§a폭탄 §6: §b" .. player:getVariable("EX001-bomb") .. "개")
 	if count >= 400 then 
 		count = 0
 		addBomb(player)
 	end
 	count = count + 1
 	player:setVariable("EX001-passiveCount", count)
+end
+
+function weakTNT(LAPlayer, event, ability, id)
+	if event:getDamager():getType():toString() == "PRIMED_TNT" then
+		event:setDamage(event:getDamage() * 0.5)
+	end
+end
+
+function Reset(player, ability)
+	game.sendActionBarMessageToAll("EX001", "")
 end
 
 function summonTNT(LAPlayer, event, ability, id)

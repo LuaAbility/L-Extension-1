@@ -2,8 +2,8 @@ local attribute = import("$.attribute.Attribute")
 
 function Init(abilityData)
 	plugin.registerEvent(abilityData, "EX015-saveLoc", "PlayerSwapHandItemsEvent", 0)
-	plugin.registerEvent(abilityData, "자가 이동", "PlayerInteractEvent", 500)
-	plugin.registerEvent(abilityData, "강제 이동", "EntityDamageEvent", 500)
+	plugin.registerEvent(abilityData, "자가 이동", "PlayerInteractEvent", 1200)
+	plugin.registerEvent(abilityData, "강제 이동", "EntityDamageEvent", 1200)
 end
 
 function onEvent(funcTable)
@@ -16,11 +16,21 @@ function onTimer(player, ability)
 	local targetLoc = player:getVariable("EX015-Location")
 	
 	if targetLoc ~= nil then
-		game.sendActionBarMessage(player:getPlayer(), "§a월드 §6: §b" .. worldInfo(targetLoc:getWorld():getEnvironment()) .. " §aX §6: §b" .. targetLoc:getX() .. " §aY §6: §b" .. targetLoc:getY() .. " §aZ §6: §b" .. targetLoc:getZ())
-		local loc = targetLoc:clone():add(0, 1, 0)
-		loc:getWorld():spawnParticle(import("$.Particle").REDSTONE, loc, 300, 0.2, 0.2, 0.2, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").LIME, 1}))
-		loc:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, loc, 150, 0.2, 0.2, 0.2, 0.05)
+		if targetLoc:getWorld():getWorldBorder():isInside(targetLoc) then
+			game.sendActionBarMessage(player:getPlayer(), "EX015", "§a월드 §6: §b" .. worldInfo(targetLoc:getWorld():getEnvironment()) .. " §aX §6: §b" .. targetLoc:getX() .. " §aY §6: §b" .. targetLoc:getY() .. " §aZ §6: §b" .. targetLoc:getZ())
+			local loc = targetLoc:clone():add(0, 1, 0)
+			loc:getWorld():spawnParticle(import("$.Particle").REDSTONE, loc, 300, 0.2, 0.2, 0.2, 0.05, newInstance("$.Particle$DustOptions", {import("$.Color").LIME, 1}))
+			loc:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, loc, 150, 0.2, 0.2, 0.2, 0.05)
+		else 
+			player:setVariable("EX015-Location", nil) 
+			game.sendMessage(player:getPlayer(), "§4[§c트랜스볼§4] §c저장 좌표가 월드 보더를 벗어나 좌표가 초기화 됩니다.")
+			game.sendActionBarMessage(player:getPlayer(), "EX015", "")
+		end
 	end
+end
+
+function Reset(player, ability)
+	game.sendActionBarMessageToAll("EX015", "")
 end
 
 function saveLoc(LAPlayer, event, ability, id)

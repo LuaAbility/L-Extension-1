@@ -10,15 +10,15 @@ end
 
 function reflection(LAPlayer, event, ability, id)
 	local damagee = event:getEntity()
-	local damager = event:getDamager()
-	if damager:getType():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
+	local damager = util.getRealDamager(event:getDamager())
 	
-	if not util.hasClass(damager, "org.bukkit.projectiles.BlockProjectileSource") and damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
-		if damagee:getHealth() - event:getDamage() <= 0 then
+	
+	if damager ~= nil and damager:getType():toString() == "PLAYER" and damagee:getType():toString() == "PLAYER" then
+		if damagee:getHealth() - event:getFinalDamage() <= 0 then
 			if game.checkCooldown(LAPlayer, game.getPlayer(damagee), ability, id) then
 				game.sendMessage(damager, "§c미러링 능력에 의해 즉사합니다.")
 				game.sendMessage(damagee, "§4[§c미러링§4] §c능력이 발동되어 능력이 제거됩니다.")
-				util.runLater(function() game.removeAbility(game.getPlayer(damagee), ability, false) end, 1)
+				game.removeAbility(LAPlayer, ability, false)
 				event:setCancelled(true)
 				damagee:addPotionEffect(newInstance("$.potion.PotionEffect", {effect.HEAL, 10, 9}))
 				damager:getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, damager:getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)

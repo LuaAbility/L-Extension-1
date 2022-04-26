@@ -11,14 +11,7 @@ function abilityUse(LAPlayer, event, ability, id)
 		if event:getItem() ~= nil then
 			if game.isAbilityItem(event:getItem(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
-					local count = LAPlayer:getVariable("EX020-abilityTime")
-					if count then
-						if count <= 0 then
-							shuffle(LAPlayer)
-						else
-							game.sendMessage(event:getPlayer(), "§1[§b셔플§1] §b재사용 대기시간 입니다. (" .. (count / 20) .. "초 / 능력 셔플)" )
-						end
-					end
+					shuffle(LAPlayer)
 				end
 			end
 		end

@@ -60,16 +60,16 @@ function hiding(LAPlayer, event, ability, id)
 end
 
 function cancelDamage(LAPlayer, event, ability, id)
-	local damager = event:getDamager()
-	if event:getCause():toString() == "PROJECTILE" then damager = event:getDamager():getShooter() end
+	local damager = util.getRealDamager(event:getDamager())
+	
 		
-	if not util.hasClass(damager, "org.bukkit.projectiles.BlockProjectileSource") and damager:getType():toString() == "PLAYER" and game.getPlayer(damager):getVariable("EX002-isInvisible") ~= nil and game.getPlayer(damager):getVariable("EX002-isInvisible") > 0 then
+	if damager ~= nil and damager:getType():toString() == "PLAYER" and game.getPlayer(event:getEntity()) and game.getPlayer(damager):getVariable("EX002-isInvisible") and game.getPlayer(damager):getVariable("EX002-isInvisible") > 0 then
 		if game.checkCooldown(LAPlayer, game.getPlayer(damager), ability, id) then
 			event:setCancelled(true)
 		end
 	end
 	
-	if event:getEntity():getType():toString() == "PLAYER" and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") ~= nil and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") > 0 then
+	if event:getEntity():getType():toString() == "PLAYER" and game.getPlayer(event:getEntity()) and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") and game.getPlayer(event:getEntity()):getVariable("EX002-isInvisible") > 0 then
 		if game.checkCooldown(LAPlayer, game.getPlayer(event:getEntity()), ability, id) then
 			event:setCancelled(true)
 		end

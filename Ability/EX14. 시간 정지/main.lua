@@ -24,7 +24,7 @@ function stopMove(player, event, ability, id)
 	if stop ~= nil and stop > 0 then
 		if game.getPlayer(event:getPlayer()) ~= player and game.targetPlayer(player, game.getPlayer(event:getPlayer()), false) then
 			event:setCancelled(true)
-			game.sendActionBarMessage(event:getPlayer(), "§4시간 정지 §c능력에 의해 이동하실 수 없습니다. (남은 시간 : " .. stop / 20.0 .. "s)")
+			game.sendActionBarMessage(event:getPlayer(), "EX014", "§4시간 정지 §c능력에 의해 이동하실 수 없습니다. (남은 시간 : " .. stop / 20.0 .. "s)")
 		end
 	end
 end
@@ -47,14 +47,17 @@ function endOfAbility(player)
 			players[i]:getPlayer():getWorld():playSound(players[i]:getPlayer():getLocation(), import("$.Sound").BLOCK_BELL_USE, 1, 1)
 			players[i]:getPlayer():getWorld():spawnParticle(import("$.Particle").ITEM_CRACK, players[i]:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05, newInstance("$.inventory.ItemStack", {import("$.Material").GLASS}))
 			players[i]:getPlayer():getWorld():spawnParticle(import("$.Particle").REVERSE_PORTAL, players[i]:getPlayer():getLocation():add(0,1,0), 500, 0.1, 0.1, 0.1)
+			
 		end
 	end
 	
+	game.sendActionBarMessageToAll("EX014", "")
 	game.sendMessage(player:getPlayer(), "§2[§a시간 정지§2] §a능력 시전 시간이 종료되었습니다. (시간 정지)") 
 end
 
 function Reset(player, ability)
 	if plugin.getPlugin().gameManager:getVariable("stopTime") ~= nil and plugin.getPlugin().gameManager:getVariable("stopTime") > 0 then endOfAbility(player) end
+	game.sendActionBarMessageToAll("EX014", "")
 end
 
 function stopTime(LAPlayer, event, ability, id)
