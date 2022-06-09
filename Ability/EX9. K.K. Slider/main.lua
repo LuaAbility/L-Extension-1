@@ -36,6 +36,7 @@ function concert(p)
 
 	for i = 1, #players do
 		if players[i]:getPlayer():getName() ~= p:getName() and game.targetPlayer(game.getPlayer(p), players[i], false, true) then
+			players[i]:getPlayer():setFallDistance(0)
 			players[i]:getPlayer():teleport(playerLoc)
 			game.sendMessage(players[i]:getPlayer(), "§a어디선가 들려오는 노랫소리를 따라갑니다.")
 		end

@@ -76,7 +76,7 @@ function killPlayer(player)
 		game.sendMessage(player:getPlayer(), "§c미러링 능력에 의해 즉사합니다.")
 		game.sendMessage(targetPlayer:getPlayer(), "§4[§c미러링§4] §c능력이 발동되어 능력이 제거됩니다.")
 		
-		game.removeAbilityAsID(players[i], "LA-EX-007", false)
+		game.removeAbilityAsID(targetPlayer, "LA-EX-007", false)
 		targetPlayer = player 
 	end
 	
@@ -91,4 +91,6 @@ function killPlayer(player)
 
 	player:getPlayer():getWorld():spawnParticle(import("$.Particle").SMOKE_NORMAL, player:getPlayer():getLocation():add(0,1,0), 150, 0.5, 1, 0.5, 0.05)
 	player:getPlayer():getWorld():playSound(player:getPlayer():getLocation(), import("$.Sound").ENTITY_WITHER_AMBIENT, 0.5, 1.0)
+	
+	game.sendActionBarMessageToAll("EX018", "")
 end

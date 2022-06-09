@@ -26,6 +26,8 @@ function onTimer(player, ability)
 			game.sendMessage(player:getPlayer(), "§4[§c트랜스볼§4] §c저장 좌표가 월드 보더를 벗어나 좌표가 초기화 됩니다.")
 			game.sendActionBarMessage(player:getPlayer(), "EX015", "")
 		end
+	else
+		game.sendActionBarMessage(player:getPlayer(), "EX015", "")
 	end
 end
 
@@ -53,7 +55,7 @@ function teleportSelf(LAPlayer, event, ability, id)
 			if game.isAbilityItem(event:getPlayer():getInventory():getItemInMainHand(), "IRON_INGOT") then
 				if game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, id) then
 					game.checkCooldown(LAPlayer, game.getPlayer(event:getPlayer()), ability, "강제 이동", false)
-					teleport(game.getPlayer(event:getPlayer()), event:getPlayer(), ability)
+					teleport(game.getPlayer(event:getPlayer()), event:getPlayer(), ability, id)
 				end
 			end
 		end
@@ -66,25 +68,25 @@ function teleportTarget(LAPlayer, event, ability, id)
 		if game.isAbilityItem(item, "IRON_INGOT") and game.targetPlayer(LAPlayer, game.getPlayer(event:getEntity())) then
 			if game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, id) then
 				game.checkCooldown(LAPlayer, game.getPlayer(event:getDamager()), ability, "자가 이동", false)
-				teleport(game.getPlayer(event:getDamager()), event:getEntity(), ability)
+				teleport(game.getPlayer(event:getDamager()), event:getEntity(), ability, id)
 			end
 		end
 	end
 end
 
-function teleport(player, target, ability)
+function teleport(player, target, ability, id)
 	local targetLoc = player:getVariable("EX015-Location")
 	
 	if targetLoc ~= nil then
 		target:getWorld():spawnParticle(import("$.Particle").PORTAL, target:getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
 		target:getWorld():playSound(target:getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
+		target:setFallDistance(0)
 		target:teleport(targetLoc)
 		target:getWorld():spawnParticle(import("$.Particle").REVERSE_PORTAL, target:getLocation():add(0,1,0), 1000, 0.1, 0.1, 0.1)
 		target:getWorld():playSound(target:getLocation(), import("$.Sound").ITEM_CHORUS_FRUIT_TELEPORT, 0.5, 1)
 		game.sendMessage(target, "§2트랜스볼 §a능력의 영향으로 지정된 좌표로 이동합니다.")
 	else 
-		ability:resetCooldown("EX015-teleportSelf")
-		ability:resetCooldown("EX015-teleportTarget")
+		ability:resetCooldown(id)
 		game.sendMessage(player:getPlayer(), "§4[§c트랜스볼§4] §c좌표가 저장되어 있지 않습니다.")
 	end
 end
